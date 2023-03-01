@@ -1,0 +1,192 @@
+<p-dialog (onHide)="OnCloseDialog()" [(visible)]="displayModal" [baseZIndex]="10000" [draggable]="false" [modal]="true"
+          [resizable]="false" [style]="{width: '80vw'}">
+
+    <p-header>
+        <div *ngIf="headerToShow === 'stock'">
+            <span class="trade-title">Trades By </span><h4 class="title cursor-pointer"
+                                                           #popoverTrigger="mdePopoverTrigger"
+                                                           [mdePopoverTriggerFor]="appPopoverSec"><b>{{title}}</b></h4>
+            <mde-popover #appPopoverSec="mdePopover" [mdePopoverOverlapTrigger]="false"
+                         mdePopoverPositionX="before" mdePopoverPositionY="above">
+                <div class="popover right">
+                    <div class="arrow"></div>
+                    <div class="popover-content">
+                        <div class="p-t-15 d-flex align-items-center">
+                            <img [lazyLoad]='data[0]?.profileImage'>
+                            <b>  {{ data[0]?.politicianName }}</b>
+                        </div>
+                        <div class="my-15">
+                            <b>Party:</b>&nbsp; <span>{{ data[0]?.party }}</span>
+                        </div>
+                        <div class="my-15">
+                            <b>State:</b>&nbsp; <span>{{data[0]?.state}}</span>
+                        </div>
+                        <div class="my-15 d-flex">
+                            <b>Tenure:</b>&nbsp; <span>{{ data[0]?.tenure}}</span>
+                        </div>
+
+                    </div>
+                </div>
+            </mde-popover>
+        </div>
+        <div *ngIf="headerToShow !== 'stock'">
+            <span class="trade-title"> Trades In </span><h4 class="title"><b>{{title}}</b></h4>
+        </div>
+    </p-header>
+    <div class="modal-table">
+        <table class="table">
+            <thead>
+            <tr>
+                <th *ngFor="let heading of getHeaders()">{{heading}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let trade of data| paginate: config">
+                <td>{{ trade?.publicationDate?.split(' ')[0] | date: "dd/MMM/yyyy" }}</td>
+                <td *ngIf="showHeader() == 'both' || showHeader() == 'person'" appShowIfEllipsis
+                    pTooltip="{{ trade?.politicianName }}" tooltipPosition="top">
+                    <span *ngIf="!trade?.fid"> {{ trade?.politicianName }} </span>
+                    <a #popoverTrigger="mdePopoverTrigger" [mdePopoverTriggerFor]="appPopover" *ngIf="trade?.fid"
+                       [routerLink]="['/politician-info', trade.biographyId]" class="info-button ellipses">
+                        {{ trade?.politicianName }}
+                        <!-- <div [ngClass]="trade.congressType == 'Senator' ? 'congType senator' : 'congType representative'">
+                             ({{ trade.congressType }})
+                         </div>-->
+                    </a>
+                    <!-- <span *ngIf="trade.congressType === 'Senator'"
+                           class="party-symbol democratic"
+                           [ngClass]="{'republican-party':trade.party === 'Republican',
+                                                'democrat-party': (trade.party === 'Democratic' ||  trade.party === 'Democrat' ),
+                                                 'other-party':(trade.party === 'Independent' ||  trade.party === 'Other')}">S</span>
+                     <span *ngIf="trade.congressType === 'Representative'"
+                           class="party-symbol republican" [ngClass]="{'republican-party':trade.party === 'Republican',
+                                                'democrat-party': (trade.party === 'Democratic' ||  trade.party === 'Democrat' ),
+                                                'other-party':(trade.party === 'Independent' ||  trade.party === 'Other')}">R</span>-->
+<!--                    <span *ngIf="trade.party === 'Republican'"-->
+<!--                          class="party-symbol republican republican-party">-->
+<!--                                                    <span *ngIf="trade.congressType === 'Senator'">S</span>-->
+<!--                                                       <span *ngIf="trade.congressType === 'Representative'">R</span>-->
+<!--                                                     <span>R</span>-->
+<!--                                                    </span>-->
+<!--                    <span *ngIf="trade.party === 'Democrat'"-->
+<!--                          class="party-symbol democratic democrat-party">-->
+<!--                                                <span *ngIf="trade.congressType === 'Senator'">S</span>-->
+<!--                                                    <span *ngIf="trade.congressType === 'Representative'">R</span>-->
+<!--                                                 <span>D</span>-->
+<!--                                                </span>-->
+<!--                    <span *ngIf="trade.party === 'Independent' || trade.party === 'Other'"-->
+<!--                          class="party-symbol other-party">-->
+<!--                                                        <span *ngIf="trade.congressType === 'Senator'">S</span>-->
+<!--                                                            <span *ngIf="trade.congressType === 'Representative'">R</span>-->
+<!--                                                            <span>O</span>-->
+<!--                                                        </span>-->
+                    <span *ngIf="trade.congressType === 'Representative'"
+                          class="party-symbol republican republican-party">
+                                                     <span>Rep ({{trade?.party === 'Democrat' ? 'D' :
+                                                         trade?.party === 'Republican' ? 'R' : 'O'}}
+                                                         - {{trade?.stateShortName}})</span>
+                                        </span>
+                    <span *ngIf="trade.congressType === 'Senator'"
+                          class="party-symbol republican republican-party">
+                                                     <span>Sen ({{trade?.party === 'Democrat' ? 'D' :
+                                                         trade?.party === 'Republican' ? 'R' : 'O'}}
+                                                         - {{trade?.stateShortName}})</span>
+                                        </span>
+
+                    <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false"
+                                 mdePopoverPositionX="before" mdePopoverPositionY="above">
+                        <div class="popover right">
+                            <div class="arrow"></div>
+                            <div class="popover-content">
+                                <div class="p-t-15 d-flex align-items-center">
+                                    <img [src]='trade?.profileImage'>
+                                    <b>  {{ trade?.politicianName }}</b>
+                                </div>
+                                <div class="my-15">
+                                    <b>Party:</b>&nbsp; <span>{{ trade?.party }}</span>
+                                </div>
+                                <div class="my-15">
+                                    <b>Office:</b>&nbsp; <span>{{ trade?.congressType }}</span>
+                                </div>
+
+                                <div class="my-15">
+                                    <b>State:</b>&nbsp; <span>{{trade?.state}}</span>
+                                </div>
+                                <div class="my-15 d-flex">
+                                    <b>Tenure:</b>&nbsp; <span>{{ trade?.tenure}}</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </mde-popover>
+                </td>
+                <!--         <td> {{ trade.owner | titlecase }} </td>-->
+
+                <td *ngIf="showHeader() == 'both' || showHeader() == 'stock'" appShowIfEllipsis
+                    pTooltip="{{ trade?.issuerName }}" tooltipPosition="top">
+                    <span *ngIf="!trade?.gvkey"> {{ trade?.issuerName }} </span>
+                    <a *ngIf="trade?.gvkey" [routerLink]="['/issuer-info', trade.gvkey]">
+                        {{ trade?.issuerName }} </a>
+                </td>
+                <td class="transaction-date">{{ trade.transactionDate | date: "dd/MMM/yyyy"}} </td>
+                <td>
+                    <img *ngIf="trade?.tradeType == 'Sale' || trade?.tradeType == 'Sale (Partial)' || trade?.tradeType == 'Sale (Full)'"
+                         width="20px" src="assets/images/arrow-bottom.png">
+                    <img *ngIf="trade?.tradeType == 'Purchase'" width="20px" src="assets/images/arrow-up.png">
+                    <img *ngIf="trade?.tradeType == 'Exchange'" width="20px" height="20px"
+                         src="assets/images/arrow-down-1.png">
+                    <img *ngIf="trade?.tradeType == 'Received'" width="20px" height="20px"
+                         src="assets/images/arrow-up-2.png">
+                    <span pTooltip="{{ trade?.originalIssuerName }}"
+                          tooltipPosition="top">
+                    <span> {{ trade?.tradeType | changeValue | uppercase }}</span>
+                        <!--   <span
+                                   *ngIf="trade?.comment !== '&#45;&#45;' && trade?.comment !== null && trade?.comment !== ''"
+                                   class="com-icon"><img
+                                   pTooltip="{{ trade?.comment }}" src="assets/images/comment.png"
+                                   tooltipPosition="top"></span>-->
+
+                    <span> {{(trade?.shareType === null || trade?.shareType === '')
+                        ? '--' : '(' + trade?.shareType + ')'}}</span>
+                    <span [hidden]="trade?.comment === null || trade?.comment === ''" class="steric">*</span>
+                    </span>
+                </td>
+                <!--   <td> {{((trade?.shareType === null || trade?.shareType === '') ? '&#45;&#45;' : trade?.shareType)}}
+                       &lt;!&ndash;<span *ngIf="trade?.originalIssuerName !== '&#45;&#45;' && trade?.originalIssuerName !== null && trade?.originalIssuerName !== ''"
+                             class="com-icon"><img
+                               pTooltip="{{ trade?.originalIssuerName }}" tooltipPosition="top"
+                               src="assets/images/edit-outline.png"></span>&ndash;&gt;
+                   </td>-->
+
+                <td> {{ ((trade?.shareRange === null || trade?.shareRange === '') ? '--' : trade?.shareRange | convertShareRange)}}
+                </td>
+                <td> {{ ((trade?.sharePrice === null) ? '--' : (trade?.sharePrice| currency : 'USD' : 'symbol' : '1.2-2'))}}
+                </td>
+                <td pTooltip="{{trade?.tradeValueRange}}" tooltipPosition="top">
+                    <span *ngIf="trade?.isCapitalGain !== false && trade?.isCapitalGain !== null"
+                          class="com-icon mr-0 capital-gain-icon">
+                                         <img
+                                                 pTooltip="Capital Gains > $200"
+                                                 tooltipPosition="top"
+                                                 src="assets/images/capital-gain.png"></span>
+                    <span>{{ trade?.tradeValueRange }}</span></td>
+                <td pTooltip="If redirected  to Terms&Condition page, Please accept and click here again"
+                    tooltipPosition="top">
+                    <a href="{{trade?.rnsid}}" target="_blank">
+                        View
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination">
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
+</p-dialog>
+<div *ngIf="loading" class="overlay">
+    <div class="center">
+        <mat-progress-spinner [mode]="'indeterminate'"
+                              class="progressSpinner" diameter="50"></mat-progress-spinner>
+    </div>
+</div>

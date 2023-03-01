@@ -1,0 +1,889 @@
+<div class="container-fluid main-dashboard">
+    <div class="row">
+        <div class=" col-xs-12 hidden-xs hidden-sm p-0">
+            <div class="col-md-6">
+                <div class="d-flex">
+                    <div class="pl-15">
+                        <h3 class="my-0">{{this.committeeDetail.name}}</h3>
+                        <details>
+                            <summary>
+                                <p *ngIf="!isShowFullDesc"
+                                   style="display: inline;">{{senatorDescLess}}
+                                </p>
+                                <p *ngIf="isShowFullDesc" style="display: inline;">{{this.committeeDetail.description}}
+                                </p>
+
+                                <span (click)="ShowFullDesc()" *ngIf="!isShowFullDesc && isShowReadMore"
+                                      id="open">Read More</span>
+                                <span (click)="showLessDesc()" *ngIf="isShowFullDesc" id="close">Read Less</span>
+
+                            </summary>
+
+                        </details>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 my-15">
+                <div class="col-md-12 divider h-100 bg-white  senator-info-wrapper" style="height: 269px;">
+                    <div>
+                        <h4 class="about">Majority Members</h4>
+                        <!--  <ul class="commitee-list">
+                              <li *ngFor="let committee of committees" class="keyinfo_committtes_item">
+                                  <a [routerLink]="['/committee', committee.id]">{{committee.name}}</a>
+                              </li>
+                          </ul>-->
+                        <ul *ngIf="committeeDetail.majorityMembers.length > 0" class="commitee-list scrollbar">
+                            <li *ngFor="let member of this.committeeDetail.majorityMembers"
+                                class="keyinfo_committtes_item"><a
+                                    [routerLink]="['/politician-info', member.biographyId]"
+                                    appShowIfEllipsis
+                                    pTooltip="{{ member?.politicianName }}" routerLinkActive="active"
+                                    tooltipPosition="top">    {{ member?.politicianName }} </a></li>
+                        </ul>
+                    </div>
+                    <div class="no-commitee" *ngIf="committeeDetail.majorityMembers.length  === 0">
+                        <img src="assets/images/CapitolTrades_2.png">
+                        <span>No Committee Members</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 my-15">
+                <div class="col-md-12 h-100 senator-info-wrapper bg-white" style="height: 269px;">
+                    <div>
+                        <h4 class="about">Minority Members</h4>
+                        <ul *ngIf="committeeDetail.minorityMembers.length > 0" class="commitee-list scrollbar">
+                            <li *ngFor="let member of this.committeeDetail.minorityMembers"
+                                class="keyinfo_committtes_item">
+                                <a
+                                        [routerLink]="['/politician-info', member.biographyId]"
+                                        appShowIfEllipsis
+                                        pTooltip="{{ member?.politicianName }}" routerLinkActive="active"
+                                        tooltipPosition="top">    {{ member?.politicianName }} </a></li>
+                        </ul>
+                    </div>
+                    <div class="no-commitee" *ngIf="committeeDetail.minorityMembers.length === 0">
+                        <img src="assets/images/CapitolTrades_2.png">
+                        <span>No Committee Members</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="card-title"><span>Filters</span>
+             &lt;!&ndash;     <form class="p-r-10">
+                      <label class="radio-inline">
+                          <input (change)="filterCommitteePage('Purchase',+selectedPoliticianDays)"
+                                 checked name="tradeType"
+                                 type="radio"
+                                 value="Purchase">Buy
+                      </label>
+                      <label class="radio-inline">
+                          <input (change)="filterCommitteePage('Sale',+selectedPoliticianDays)"
+                                 name="tradeType" type="radio"
+                                 value="Sale">Sell
+                      </label>
+
+                  </form>&ndash;&gt;
+             <mat-radio-group aria-label="Select an option">
+                 <mat-radio-button value="Purchase"
+                                   (change)="filterCommitteePage('Purchase',+selectedPoliticianDays)"
+                                   color="primary"
+                                   class="mr-10 fs-16"
+                                   checked>Buy
+                 </mat-radio-button>
+                 <mat-radio-button value="Sale"
+                                   (change)="filterCommitteePage('Sale',+selectedPoliticianDays)"
+                                   color="primary" class="fs-16 mr-10">
+                     Sell
+                 </mat-radio-button>
+             </mat-radio-group>
+
+             <select #mostActivePoliticiansDays
+                     (change)="filterCommitteePage(selectedPoliticianTradeType,+mostActivePoliticiansDays.value)"
+                     class="form-control">
+                 <option value=30>1 mon</option>
+                 <option value=90>3 mon</option>
+                 <option value=180>6 mon</option>
+                 <option selected value=365>1 year</option>
+             </select>
+         </div>-->
+        <!--    <div class="col-md-6 col-sm-6 col-xs-12 my-15">
+                <div class="card committee card-w-filter">
+                    <div class="card-body-for-table">
+                        <div class="card-title"><span>{{this.committeeDetail.name}}</span>
+                        </div>
+                        <div class="info-wrapper">
+                            <p class="info-text">
+                                {{this.committeeDetail.description}}
+                            </p>
+                        </div>
+                        <div class="table-custom scrollbar member-list">
+                            <ul>
+                                <div>Majority Members</div>
+                                <li *ngFor="let member of this.committeeDetail.majorityMembers"><a
+                                        [routerLink]="['/politician-info', member.biographyId]"
+                                        appShowIfEllipsis class="info-button"
+                                        pTooltip="{{ member?.politicianName }}" routerLinkActive="active"
+                                        tooltipPosition="top">    {{ member?.politicianName }} </a></li>
+                            </ul>
+                            <ul>
+                                <div>Minority Members</div>
+                                <li *ngFor="let member of this.committeeDetail.minorityMembers"><a
+                                        [routerLink]="['/politician-info', member.biographyId]"
+                                        appShowIfEllipsis class="info-button"
+                                        pTooltip="{{ member?.politicianName }}" routerLinkActive="active"
+                                        tooltipPosition="top">    {{ member?.politicianName }} </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+        <div class="col-md-6 col-sm-6 col-xs-12 my-15">
+            <div class="card">
+                <div class="card-body-for-table">
+                    <div class="card-title"><span>Most Active Politicians (Buy)</span>
+                        <!-- <form class="p-r-10">
+                             <label class="radio-inline">
+                                 <input (change)="filterMostActivePoliticians('Purchase',+selectedPoliticianDays)"
+                                        checked name="tradeType"
+                                        type="radio"
+                                        value="Purchase">Buy
+                             </label>
+                             <label class="radio-inline">
+                                 <input (change)="filterMostActivePoliticians('Sale',+selectedPoliticianDays)"
+                                        name="tradeType" type="radio"
+                                        value="Sale">Sell
+                             </label>
+
+                         </form>
+
+                         <select #mostActivePoliticiansDays
+                                 (change)="filterMostActivePoliticians(selectedPoliticianTradeType,+mostActivePoliticiansDays.value)"
+                                 class="form-control">
+                             <option value=30>1 mon</option>
+                             <option value=90>3 mon</option>
+                             <option value=180>6 mon</option>
+                             <option selected value=365>1 year</option>
+                         </select>-->
+                        <!--<small class="subtitle">*Click on “No of Trades” for details</small>-->
+                    </div>
+                    <div *ngIf="filteredMostActivePoliticianForBuy?.length == 0" class="no-data">
+                        <img src="assets/images/CapitolTrades_.png">
+                        <span>No Activity Reported</span>
+                    </div>
+                    <div *ngIf="filteredMostActivePoliticianForBuy?.length != 0"
+                         class="table-custom most-purchased-table overflow-unset">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Politician Name</th>
+                                <th>Trade Type</th>
+                                <th (click)="sortMostActivePoliticianNumberOfTrades('Buy')"
+                                    class="cursor-pointer text-right">No. of
+                                    Trades <span class="sort sort-desc-disabled"></span></th>
+                                <th (click)="sortMostActivePoliticianValueOfTrades('Buy')"
+                                    class="cursor-pointer text-right p-r-20">Value of
+                                    Trades
+                                    <span class="sort sort-desc-disabled"></span><br><small>(Average of
+                                        Range)</small></th>
+                                <th>
+                                    Details
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let trade of filteredMostActivePoliticianForBuy | slice:0:10">
+
+                                <td>
+                                    <!--<a [routerLink]="['/politician-info', trade.biographyId]"
+                                       appShowIfEllipsis class="info-button"
+                                       pTooltip="{{ trade?.politicianName }}" routerLinkActive="active"
+                                       tooltipPosition="top">
+                                        {{ trade?.politicianName  }}</a>-->
+                                    <a
+                                            (click)="storeClickedPoliticianName(trade.politicianName)"
+
+                                            [routerLink]="['/politician-info', trade.biographyId]"
+                                            class="info-button ellipses"
+                                            routerLinkActive="active">
+                                            <span class="senator-name-ellipses" #popoverTrigger="mdePopoverTrigger"
+                                                  [mdePopoverTriggerFor]="appPopover">{{ trade?.politicianName  }}</span>
+                                        <!--  <div [ngClass]="trade.congressType == 'Senator' ? 'congType senator' : 'congType representative'">
+                                              ({{ trade.congressType }})
+                                          </div>-->
+                                    </a>
+                                    <!--<span *ngIf="trade.congressType === 'Senator'"
+                                          class="party-symbol democratic"
+                                          [ngClass]="{'republican-party':trade.party === 'Republican',
+                                   'democrat-party': (trade.party === 'Democratic' ||  trade.party === 'Democrat' ),
+                                   'other-party':(trade.party === 'Independent' ||  trade.party === 'Other')}">S</span>
+                                    <span *ngIf="trade.congressType === 'Representative'"
+                                          class="party-symbol republican" [ngClass]="{'republican-party':trade.party === 'Republican',
+                                   'democrat-party': (trade.party === 'Democratic' ||  trade.party === 'Democrat' ),
+                                   'other-party':(trade.party === 'Independent' ||  trade.party === 'Other')}">R</span>-->
+
+<!--                                    <span *ngIf="trade.party === 'Republican'"-->
+<!--                                          class="party-symbol republican republican-party">-->
+<!--                                                    <span *ngIf="trade.congressType === 'Senator'">S</span>-->
+<!--                                                       <span *ngIf="trade.congressType === 'Representative'">R</span>-->
+<!--                                                     <span>R</span>-->
+<!--                                                    </span>-->
+<!--                                    <span *ngIf="trade.party === 'Democrat'"-->
+<!--                                          class="party-symbol democratic democrat-party">-->
+<!--                                                <span *ngIf="trade.congressType === 'Senator'">S</span>-->
+<!--                                                    <span *ngIf="trade.congressType === 'Representative'">R</span>-->
+<!--                                                 <span>D</span>-->
+<!--                                                </span>-->
+<!--                                    <span *ngIf="trade.party === 'Independent' || trade.party === 'Other'"-->
+<!--                                          class="party-symbol other-party">-->
+<!--                                                        <span *ngIf="trade.congressType === 'Senator'">S</span>-->
+<!--                                                            <span *ngIf="trade.congressType === 'Representative'">R</span>-->
+<!--                                                            <span>O</span>-->
+<!--                                                        </span>-->
+
+                                    <span *ngIf="trade.congressType === 'Representative'"
+                                          class="party-symbol republican republican-party">
+                                                     <span>Rep ({{trade?.party === 'Democrat' ? 'D' :
+                                                         trade?.party === 'Republican' ? 'R' : 'O'}}
+                                                         - {{trade?.stateShortName}})</span>
+                                        </span>
+                                    <span *ngIf="trade.congressType === 'Senator'"
+                                          class="party-symbol republican republican-party">
+                                                     <span>Sen ({{trade?.party === 'Democrat' ? 'D' :
+                                                         trade?.party === 'Republican' ? 'R' : 'O'}}
+                                                         - {{trade?.stateShortName}})</span>
+                                        </span>
+                                    <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false"
+                                                 mdePopoverPositionX="before" mdePopoverPositionY="above">
+                                        <div class="popover right">
+                                            <div class="arrow"></div>
+                                            <div class="popover-content">
+                                                <div class="p-t-15 d-flex align-items-center">
+<!--                                                    <img [src]='trade?.politicianImage'/>-->
+                                                    <img [lazyLoad]='trade?.profileImage'/>
+                                                    <b>  {{ trade?.politicianName }}</b>
+                                                </div>
+                                                <div class="my-15">
+                                                    <b>Party:</b>&nbsp; <span>{{ trade?.party }}</span>
+                                                </div>
+                                                <div class="my-15">
+                                                    <b>Office:</b>&nbsp;
+                                                    <span>{{ trade?.congressType }}</span>
+                                                </div>
+                                                <div class="my-15">
+                                                    <b>State:</b>&nbsp; <span>{{trade?.state}}</span>
+                                                </div>
+                                                <div class="my-15 d-flex">
+                                                    <b>Tenure:</b>&nbsp; <span>{{ trade?.tenure}}</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </mde-popover>
+                                </td>
+                                <td>{{(trade?.tradeType !== null) ? (trade?.tradeType | changeTradeType) : '--'  }}</td>
+                                <td
+                                        class="text-right">
+                                    {{ (trade?.numberOfTrades !== null) ? trade?.numberOfTrades : '--' }}
+                                </td>
+                                <td class=" text-right">
+                                    {{(trade?.valueOfTrades !== null) ? (trade?.valueOfTrades | currency : 'USD' : 'symbol' : '1.0-0') : '--' }}
+                                </td>
+                                <td>
+                                    <a (click)="showPoliticianTrade(trade.fromLastnDays, trade.tradeType, trade.politicianName)"><img
+                                            class="view-list" src="assets/images/view-list.png"></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="loader-wrap">
+                    <p-progressSpinner *ngIf="loadingTable" [style]="{width: '25px', height: '25px'}"
+                                       animationDuration=".5s" fill="#EEEEEE" strokeWidth="4">
+                    </p-progressSpinner>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12 my-15">
+            <div class="card">
+                <div class="card-body-for-table">
+                    <div class="card-title"><span>Most Active Politicians (Sell)</span>
+                        <!-- <form class="p-r-10">
+                             <label class="radio-inline">
+                                 <input (change)="filterMostActivePoliticians('Purchase',+selectedPoliticianDays)"
+                                        checked name="tradeType"
+                                        type="radio"
+                                        value="Purchase">Buy
+                             </label>
+                             <label class="radio-inline">
+                                 <input (change)="filterMostActivePoliticians('Sale',+selectedPoliticianDays)"
+                                        name="tradeType" type="radio"
+                                        value="Sale">Sell
+                             </label>
+
+                         </form>
+
+                         <select #mostActivePoliticiansDays
+                                 (change)="filterMostActivePoliticians(selectedPoliticianTradeType,+mostActivePoliticiansDays.value)"
+                                 class="form-control">
+                             <option value=30>1 mon</option>
+                             <option value=90>3 mon</option>
+                             <option value=180>6 mon</option>
+                             <option selected value=365>1 year</option>
+                         </select>-->
+                        <!--<small class="subtitle">*Click on “No of Trades” for details</small>-->
+                    </div>
+                    <div *ngIf="filteredMostActivePoliticianForSell?.length == 0" class="no-data">
+                        <img src="assets/images/CapitolTrades_.png">
+                        <span>No Activity Reported</span>
+                    </div>
+                    <div *ngIf="filteredMostActivePoliticianForSell?.length != 0"
+                         class="table-custom most-purchased-table overflow-unset">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Politician Name</th>
+                                <th>Trade Type</th>
+                                <th (click)="sortMostActivePoliticianNumberOfTrades('Sell')"
+                                    class="cursor-pointer text-right">No. of
+                                    Trades <span class="sort sort-desc-disabled"></span></th>
+                                <th (click)="sortMostActivePoliticianValueOfTrades('Sell')"
+                                    class="cursor-pointer text-right p-r-20">Value of
+                                    Trades
+                                    <span class="sort sort-desc-disabled"></span><br><small>(Average of
+                                        Range)</small></th>
+                                <th>
+                                    Details
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let trade of filteredMostActivePoliticianForSell | slice:0:10">
+
+                                <td>
+                                    <!--<a [routerLink]="['/politician-info', trade.biographyId]"
+                                       appShowIfEllipsis class="info-button"
+                                       pTooltip="{{ trade?.politicianName }}" routerLinkActive="active"
+                                       tooltipPosition="top">
+                                        {{ trade?.politicianName  }}</a>-->
+                                    <a
+                                            (click)="storeClickedPoliticianName(trade.politicianName)"
+
+                                            [routerLink]="['/politician-info', trade.biographyId]"
+                                            class="info-button ellipses"
+                                            routerLinkActive="active">
+                                            <span class="senator-name-ellipses" #popoverTrigger="mdePopoverTrigger"
+                                                  [mdePopoverTriggerFor]="appPopover">{{ trade?.politicianName  }}</span>
+                                        <!--  <div [ngClass]="trade.congressType == 'Senator' ? 'congType senator' : 'congType representative'">
+                                              ({{ trade.congressType }})
+                                          </div>-->
+                                    </a>
+                                    <!--<span *ngIf="trade.congressType === 'Senator'"
+                                          class="party-symbol democratic"
+                                          [ngClass]="{'republican-party':trade.party === 'Republican',
+                                   'democrat-party': (trade.party === 'Democratic' ||  trade.party === 'Democrat' ),
+                                   'other-party':(trade.party === 'Independent' ||  trade.party === 'Other')}">S</span>
+                                    <span *ngIf="trade.congressType === 'Representative'"
+                                          class="party-symbol republican" [ngClass]="{'republican-party':trade.party === 'Republican',
+                                   'democrat-party': (trade.party === 'Democratic' ||  trade.party === 'Democrat' ),
+                                   'other-party':(trade.party === 'Independent' ||  trade.party === 'Other')}">R</span>-->
+
+<!--                                    <span *ngIf="trade.party === 'Republican'"-->
+<!--                                          class="party-symbol republican republican-party">-->
+<!--                                                    <span *ngIf="trade.congressType === 'Senator'">S</span>-->
+<!--                                                       <span *ngIf="trade.congressType === 'Representative'">R</span>-->
+<!--                                                     <span>R</span>-->
+<!--                                                    </span>-->
+<!--                                    <span *ngIf="trade.party === 'Democrat'"-->
+<!--                                          class="party-symbol democratic democrat-party">-->
+<!--                                                <span *ngIf="trade.congressType === 'Senator'">S</span>-->
+<!--                                                    <span *ngIf="trade.congressType === 'Representative'">R</span>-->
+<!--                                                 <span>D</span>-->
+<!--                                                </span>-->
+<!--                                    <span *ngIf="trade.party === 'Independent' || trade.party === 'Other'"-->
+<!--                                          class="party-symbol other-party">-->
+<!--                                                        <span *ngIf="trade.congressType === 'Senator'">S</span>-->
+<!--                                                            <span *ngIf="trade.congressType === 'Representative'">R</span>-->
+<!--                                                            <span>O</span>-->
+<!--                                                        </span>-->
+
+                                    <span *ngIf="trade.congressType === 'Representative'"
+                                          class="party-symbol republican republican-party">
+                                                     <span>Rep ({{trade?.party === 'Democrat' ? 'D' :
+                                                         trade?.party === 'Republican' ? 'R' : 'O'}}
+                                                         - {{trade?.stateShortName}})</span>
+                                        </span>
+                                    <span *ngIf="trade.congressType === 'Senator'"
+                                          class="party-symbol republican republican-party">
+                                                     <span>Sen ({{trade?.party === 'Democrat' ? 'D' :
+                                                         trade?.party === 'Republican' ? 'R' : 'O'}}
+                                                         - {{trade?.stateShortName}})</span>
+                                        </span>
+                                    <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false"
+                                                 mdePopoverPositionX="before" mdePopoverPositionY="above">
+                                        <div class="popover right">
+                                            <div class="arrow"></div>
+                                            <div class="popover-content">
+                                                <div class="p-t-15 d-flex align-items-center">
+<!--                                                    <img [src]='trade?.politicianImage'/>-->
+                                                    <img [lazyLoad]='trade?.profileImage'/>
+                                                    <b>  {{ trade?.politicianName }}</b>
+                                                </div>
+                                                <div class="my-15">
+                                                    <b>Party:</b>&nbsp; <span>{{ trade?.party }}</span>
+                                                </div>
+                                                <div class="my-15">
+                                                    <b>Office:</b>&nbsp;
+                                                    <span>{{ trade?.congressType }}</span>
+                                                </div>
+                                                <div class="my-15">
+                                                    <b>State:</b>&nbsp; <span>{{trade?.state}}</span>
+                                                </div>
+                                                <div class="my-15 d-flex">
+                                                    <b>Tenure:</b>&nbsp; <span>{{ trade?.tenure}}</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </mde-popover>
+                                </td>
+                                <td>{{(trade?.tradeType !== null) ? (trade?.tradeType | changeTradeType) : '--'  }}</td>
+                                <td
+                                        class="text-right">
+                                    {{ (trade?.numberOfTrades !== null) ? trade?.numberOfTrades : '--' }}
+                                </td>
+                                <td class=" text-right">
+                                    {{(trade?.valueOfTrades !== null) ? (trade?.valueOfTrades | currency : 'USD' : 'symbol' : '1.0-0') : '--' }}
+                                </td>
+                                <td>
+                                    <a (click)="showPoliticianTrade(trade.fromLastnDays, trade.tradeType, trade.politicianName)"><img
+                                            class="view-list" src="assets/images/view-list.png"></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="loader-wrap">
+                    <p-progressSpinner *ngIf="loadingTable" [style]="{width: '25px', height: '25px'}"
+                                       animationDuration=".5s" fill="#EEEEEE" strokeWidth="4">
+                    </p-progressSpinner>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-6 my-15">
+            <div class="card traded-stock">
+                <div class="card-body-for-table height-xs-auto">
+                    <div class="card-title"><span>Most Traded Stocks (Buy)</span>
+                        <!--<form class="p-r-10">
+                            <label class="radio-inline">
+                                <input (change)="filterMostActiveStock('Purchase',+selectedStockDays)"
+                                       checked
+                                       name="tradeType"
+                                       type="radio" value="Purchase">Buy
+                            </label>
+                            <label class="radio-inline">
+                                <input (change)="filterMostActiveStock('Sale',+selectedStockDays)"
+                                       name="tradeType"
+                                       type="radio"
+                                       value="Sale">Sell
+                            </label>
+                        </form>
+                        <select #mostradedStocksDays
+                                (change)="filterMostActiveStock(selectedStockTradeType,+mostradedStocksDays.value)"
+                                class="form-control">
+                            <option value=30>1 mon</option>
+                            <option value=90>3 mon</option>
+                            <option value=180>6 mon</option>
+                            <option selected value=365>1 year</option>
+                        </select>-->
+                        <!--<small class="subtitle">*Click on “No of Trades” for details</small>-->
+                    </div>
+                    <div *ngIf="filteredMostActiveStockForBuy?.length == 0" class="no-data">
+                        <img src="assets/images/CapitolTrades_.png">
+                        <span>No Activity Reported</span>
+                    </div>
+                    <div class="col-md-12 col-xs-12 col-sm-12 p-0 h-100">
+                        <div *ngIf="filteredMostActiveStockForBuy?.length != 0"
+                             class="table-custom most-purchased-table overflow-unset">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Stock Name</th>
+                                    <th>Trade Type</th>
+                                    <th (click)="sortMostActiveStockNumberOfTrades('Buy')"
+                                        class="cursor-pointer text-right">No. of Trades
+                                        <span class="sort sort-desc-disabled"></span></th>
+                                    <th (click)="sortMostActiveStockValueOfTrades('Buy')"
+                                        class="cursor-pointer text-right p-r-20">Value of
+                                        Trades <span class="sort sort-desc-disabled"></span><br><small>(Average
+                                            of
+                                            Range)</small></th>
+                                    <th>Details</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr *ngFor="let trade of filteredMostActiveStockForBuy| slice:0:10 ">
+                                    <td appShowIfEllipsis class=" stock-name"
+                                        pTooltip="{{ trade?.stockName }}"
+                                        tooltipPosition="top">
+                                        <a *ngIf="!isGvkeyAvailable(trade)"
+                                           [queryParams]="{name: trade.stockName}"
+                                           [routerLink]="['/issuer-info']">
+                                            {{ trade?.stockName }} </a>
+                                        <!--                                        <span *ngIf="!isGvkeyAvailable(trade)"> {{ trade?.issuerName }} </span>-->
+                                        <a *ngIf="isGvkeyAvailable(trade)"
+                                           [routerLink]="['/issuer-info', trade.gvkey]">
+                                            {{ trade?.stockName }} </a>
+                                        <!--                                        <span *ngIf="!(trade?.gvkey)">{{trade?.stockName}}-->
+                                        <!--                                        </span>-->
+                                        <!--                                                    <a (click)="drawSenatorsTradeInStockPieChart(trade?.stockName)"-->
+                                        <!--                                                       *ngIf="trade?.gvkey"-->
+                                        <!--                                                       class="sector-name">{{ (trade?.stockName) ? trade?.stockName : '&#45;&#45;' }}</a>-->
+                                    </td>
+                                    <td>{{ trade?.tradeType | changeTradeType}}</td>
+                                    <td (click)="showStockTrade(trade.fromLastnDays,trade.tradeType,trade.stockName)"
+                                        class="text-right">
+                                        {{ (trade?.numberOfTrades !== null) ? trade?.numberOfTrades : '--' }}
+                                    </td>
+                                    <td
+                                            class="text-right">
+                                        {{ trade?.valueOfTrades | currency : 'USD' : 'symbol' : '1.0-0' }}
+                                    </td>
+                                    <td>
+                                        <a (click)="showStockTrade(trade.fromLastnDays,trade.tradeType,trade.stockName)"><img
+                                                class="view-list" src="assets/images/view-list.png"></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="loader-wrap">
+                        <p-progressSpinner *ngIf="loadingTable" [style]="{width: '25px', height: '25px'}"
+                                           animationDuration=".5s" fill="#EEEEEE" strokeWidth="4">
+                        </p-progressSpinner>
+                    </div>
+                    <!-- <div class="col-md-6 col-xs-12 col-sm-12">
+                         <div class="chart-wrapper">
+
+                             <h4 class="text-center">Politicians Trade in <a *ngIf="pieChartForStock"
+                                                                             class="highlight-issuerName">{{selectedStock}}</a>
+                             </h4>
+                             <div *ngIf="pieChartForStock" [options]="senatorsTradeInSelectedStockChartData"
+                                  class="demo-chart"
+                                  echarts>
+                             </div>
+                         </div>
+                     </div>-->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-6 my-15">
+            <div class="card traded-stock">
+                <div class="card-body-for-table height-xs-auto">
+                    <div class="card-title"><span>Most Traded Stocks (Sell)</span>
+                        <!--<form class="p-r-10">
+                            <label class="radio-inline">
+                                <input (change)="filterMostActiveStock('Purchase',+selectedStockDays)"
+                                       checked
+                                       name="tradeType"
+                                       type="radio" value="Purchase">Buy
+                            </label>
+                            <label class="radio-inline">
+                                <input (change)="filterMostActiveStock('Sale',+selectedStockDays)"
+                                       name="tradeType"
+                                       type="radio"
+                                       value="Sale">Sell
+                            </label>
+                        </form>
+                        <select #mostradedStocksDays
+                                (change)="filterMostActiveStock(selectedStockTradeType,+mostradedStocksDays.value)"
+                                class="form-control">
+                            <option value=30>1 mon</option>
+                            <option value=90>3 mon</option>
+                            <option value=180>6 mon</option>
+                            <option selected value=365>1 year</option>
+                        </select>-->
+                        <!--<small class="subtitle">*Click on “No of Trades” for details</small>-->
+                    </div>
+                    <div *ngIf="filteredMostActiveStockForSell?.length == 0" class="no-data">
+                        <img src="assets/images/CapitolTrades_.png">
+                        <span>No Activity Reported</span>
+                    </div>
+                    <div class="col-md-12 col-xs-12 col-sm-12 p-0 h-100">
+                        <div *ngIf="filteredMostActiveStockForSell?.length != 0"
+                             class="table-custom most-purchased-table overflow-unset">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Stock Name</th>
+                                    <th>Trade Type</th>
+                                    <th (click)="sortMostActiveStockNumberOfTrades('Sell')"
+                                        class="cursor-pointer text-right">No. of Trades
+                                        <span class="sort sort-desc-disabled"></span></th>
+                                    <th (click)="sortMostActiveStockValueOfTrades('Sell')"
+                                        class="cursor-pointer text-right p-r-20">Value of
+                                        Trades <span class="sort sort-desc-disabled"></span><br><small>(Average
+                                            of
+                                            Range)</small></th>
+                                    <th>Details</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr *ngFor="let trade of filteredMostActiveStockForSell | slice:0:10 ">
+                                    <td appShowIfEllipsis class=" stock-name"
+                                        pTooltip="{{ trade?.stockName }}"
+                                        tooltipPosition="top">
+                                        <a *ngIf="!isGvkeyAvailable(trade)"
+                                           [queryParams]="{name: trade.stockName}"
+                                           [routerLink]="['/issuer-info']">
+                                            {{ trade?.stockName }} </a>
+                                        <!--                                        <span *ngIf="!isGvkeyAvailable(trade)"> {{ trade?.issuerName }} </span>-->
+                                        <a *ngIf="isGvkeyAvailable(trade)"
+                                           [routerLink]="['/issuer-info', trade.gvkey]">
+                                            {{ trade?.stockName }} </a>
+                                        <!--                                        <span *ngIf="!(trade?.gvkey)">{{trade?.stockName}}-->
+                                        <!--                                        </span>-->
+                                        <!--                                                    <a (click)="drawSenatorsTradeInStockPieChart(trade?.stockName)"-->
+                                        <!--                                                       *ngIf="trade?.gvkey"-->
+                                        <!--                                                       class="sector-name">{{ (trade?.stockName) ? trade?.stockName : '&#45;&#45;' }}</a>-->
+                                    </td>
+                                    <td>{{ trade?.tradeType | changeTradeType}}</td>
+                                    <td (click)="showStockTrade(trade.fromLastnDays,trade.tradeType,trade.stockName)"
+                                        class="text-right">
+                                        {{ (trade?.numberOfTrades !== null) ? trade?.numberOfTrades : '--' }}
+                                    </td>
+                                    <td
+                                            class="text-right">
+                                        {{ trade?.valueOfTrades | currency : 'USD' : 'symbol' : '1.0-0' }}
+                                    </td>
+                                    <td>
+                                        <a (click)="showStockTrade(trade.fromLastnDays,trade.tradeType,trade.stockName)"><img
+                                                class="view-list" src="assets/images/view-list.png"></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="loader-wrap">
+                        <p-progressSpinner *ngIf="loadingTable" [style]="{width: '25px', height: '25px'}"
+                                           animationDuration=".5s" fill="#EEEEEE" strokeWidth="4">
+                        </p-progressSpinner>
+                    </div>
+                    <!-- <div class="col-md-6 col-xs-12 col-sm-12">
+                         <div class="chart-wrapper">
+
+                             <h4 class="text-center">Politicians Trade in <a *ngIf="pieChartForStock"
+                                                                             class="highlight-issuerName">{{selectedStock}}</a>
+                             </h4>
+                             <div *ngIf="pieChartForStock" [options]="senatorsTradeInSelectedStockChartData"
+                                  class="demo-chart"
+                                  echarts>
+                             </div>
+                         </div>
+                     </div>-->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-6 my-15">
+            <div class="card traded-stock">
+                <div class="card-body-for-table height-xs-auto">
+                    <div class="card-title"><span>Most Traded Sectors (Buy)</span>
+                        <!--<form class="p-r-10">
+                            <label class="radio-inline">
+                                <input (change)="filterMostActiveSectors('Purchase',+selectedSectorDays)"
+                                       checked
+                                       name="tradeType"
+                                       type="radio" value="Purchase">Buy
+                            </label>
+                            <label class="radio-inline">
+                                <input (change)="filterMostActiveSectors('Sale',+selectedSectorDays)"
+                                       name="tradeType"
+                                       type="radio"
+                                       value="Sale">Sell
+                            </label>
+                        </form>
+                        <select #mostradedSectorsDays
+                                (change)="filterMostActiveSectors(selectedSectorTradeType,+mostradedSectorsDays.value)"
+                                class="form-control">
+                            <option value=30>1 mon</option>
+                            <option value=90>3 mon</option>
+                            <option value=180>6 mon</option>
+                            <option selected value=365>1 year</option>
+                        </select>-->
+                        <!--<small class="subtitle">*Click on “No of Trades” for details</small>-->
+                    </div>
+                    <div *ngIf="filteredMostActiveSectorForBuy?.length == 0" class="no-data">
+                        <img src="assets/images/CapitolTrades_.png">
+                        <span>No Activity Reported</span>
+                    </div>
+                    <div class="col-md-12 col-xs-12 col-sm-12 p-0 h-100">
+                        <div *ngIf="filteredMostActiveSectorForBuy?.length != 0"
+                             class="table-custom most-purchased-table overflow-unset">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Sector Name</th>
+                                    <th>Trade Type</th>
+                                    <th (click)="sortMostActiveSectorNumberOfTrades('Buy')"
+                                        class="cursor-pointer text-right">No. of
+                                        Trades <span class="sort sort-desc-disabled"></span></th>
+                                    <th (click)="sortMostActiveSectorValueOfTrades('Buy')"
+                                        class="cursor-pointer text-right p-r-20">Value of
+                                        Trades <span class="sort sort-desc-disabled"></span><br><small>(Average
+                                            of
+                                            Range)</small></th>
+                                    <th>Details</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr *ngFor="let trade of filteredMostActiveSectorForBuy | slice:0:10">
+                                    <td appShowIfEllipsis class=" stock-name"
+                                        pTooltip="{{ trade?.sectorName }}"
+                                        tooltipPosition="top">
+                                        {{ (trade?.sectorName) ? trade?.sectorName : '--' }}
+                                    </td>
+                                    <td>{{(trade?.tradeType) ? (trade?.tradeType | changeTradeType) : '--' }}</td>
+                                    <td class="text-right">
+                                        {{ (trade?.numberOfTrades !== null) ? trade?.numberOfTrades : '--' }}
+                                    </td>
+                                    <td class="text-right">
+
+                                        {{ (trade?.valueOfTrades !== null) ? (trade?.valueOfTrades | currency : 'USD' : 'symbol' : '1.0-0') : '--' }}
+
+                                    </td>
+                                    <td>
+                                        <a (click)="showSectorTrade(trade.fromLastnDays, trade.tradeType, trade.sectorName)"><img
+                                                class="view-list" src="assets/images/view-list.png"></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="loader-wrap">
+                        <p-progressSpinner *ngIf="loadingTable" [style]="{width: '25px', height: '25px'}"
+                                           animationDuration=".5s" fill="#EEEEEE" strokeWidth="4">
+                        </p-progressSpinner>
+                    </div>
+                    <!--<div class="col-md-6 col-xs-12 col-sm-12">
+                        <div class="chart-wrapper">
+
+                            <h4 class="text-center">Politicians Trade in <a *ngIf="pieChartForSector"
+                                                                            class="highlight-issuerName">{{selectedSector}}</a>
+                            </h4>
+                            <div *ngIf="pieChartForSector" [options]="senatorsTradeInSelectedSectorChartData"
+                                 class="demo-chart"
+                                 echarts>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-6 my-15">
+            <div class="card traded-stock">
+                <div class="card-body-for-table height-xs-auto">
+                    <div class="card-title"><span>Most Traded Sectors (Sell)</span>
+                        <!--<form class="p-r-10">
+                            <label class="radio-inline">
+                                <input (change)="filterMostActiveSectors('Purchase',+selectedSectorDays)"
+                                       checked
+                                       name="tradeType"
+                                       type="radio" value="Purchase">Buy
+                            </label>
+                            <label class="radio-inline">
+                                <input (change)="filterMostActiveSectors('Sale',+selectedSectorDays)"
+                                       name="tradeType"
+                                       type="radio"
+                                       value="Sale">Sell
+                            </label>
+                        </form>
+                        <select #mostradedSectorsDays
+                                (change)="filterMostActiveSectors(selectedSectorTradeType,+mostradedSectorsDays.value)"
+                                class="form-control">
+                            <option value=30>1 mon</option>
+                            <option value=90>3 mon</option>
+                            <option value=180>6 mon</option>
+                            <option selected value=365>1 year</option>
+                        </select>-->
+                        <!--<small class="subtitle">*Click on “No of Trades” for details</small>-->
+                    </div>
+                    <div *ngIf="filteredMostActiveSectorForSell?.length == 0" class="no-data">
+                        <img src="assets/images/CapitolTrades_.png">
+                        <span>No Activity Reported</span>
+                    </div>
+                    <div class="col-md-12 col-xs-12 col-sm-12 p-0 h-100">
+                        <div *ngIf="filteredMostActiveSectorForSell?.length != 0"
+                             class="table-custom most-purchased-table overflow-unset">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Sector Name</th>
+                                    <th>Trade Type</th>
+                                    <th (click)="sortMostActiveSectorNumberOfTrades('Sell')"
+                                        class="cursor-pointer text-right">No. of
+                                        Trades <span class="sort sort-desc-disabled"></span></th>
+                                    <th (click)="sortMostActiveSectorValueOfTrades('Sell')"
+                                        class="cursor-pointer text-right p-r-20">Value of
+                                        Trades <span class="sort sort-desc-disabled"></span><br><small>(Average
+                                            of
+                                            Range)</small></th>
+                                    <th>Details</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr *ngFor="let trade of filteredMostActiveSectorForSell | slice:0:10">
+                                    <td appShowIfEllipsis class=" stock-name"
+                                        pTooltip="{{ trade?.sectorName }}"
+                                        tooltipPosition="top">
+                                        {{ (trade?.sectorName) ? trade?.sectorName : '--' }}
+                                    </td>
+                                    <td>{{(trade?.tradeType) ? (trade?.tradeType | changeTradeType) : '--' }}</td>
+                                    <td class="text-right">
+                                        {{ (trade?.numberOfTrades !== null) ? trade?.numberOfTrades : '--' }}
+                                    </td>
+                                    <td class="text-right">
+
+                                        {{ (trade?.valueOfTrades !== null) ? (trade?.valueOfTrades | currency : 'USD' : 'symbol' : '1.0-0') : '--' }}
+
+                                    </td>
+                                    <td>
+                                        <a (click)="showSectorTrade(trade.fromLastnDays, trade.tradeType, trade.sectorName)"><img
+                                                class="view-list" src="assets/images/view-list.png"></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="loader-wrap">
+                        <p-progressSpinner *ngIf="loadingTable" [style]="{width: '25px', height: '25px'}"
+                                           animationDuration=".5s" fill="#EEEEEE" strokeWidth="4">
+                        </p-progressSpinner>
+                    </div>
+                    <!--<div class="col-md-6 col-xs-12 col-sm-12">
+                        <div class="chart-wrapper">
+
+                            <h4 class="text-center">Politicians Trade in <a *ngIf="pieChartForSector"
+                                                                            class="highlight-issuerName">{{selectedSector}}</a>
+                            </h4>
+                            <div *ngIf="pieChartForSector" [options]="senatorsTradeInSelectedSectorChartData"
+                                 class="demo-chart"
+                                 echarts>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-number-of-trades-table></app-number-of-trades-table>

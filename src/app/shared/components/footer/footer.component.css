@@ -1,0 +1,28 @@
+.main-footer{
+/*  position: fixed;
+  bottom: 0;*/
+  width: 100%;
+  z-index: 10;
+}
+.footer-container {
+  text-align: left;
+  font-size: 12px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  padding-left: 160px;
+  padding-right: 30px;
+
+}
+.footer-container div{
+  flex: 0.6;
+  z-index: 1;
+}
+.footer-container span{
+  flex:1;
+}
+.footer-links a{
+  color: #23527C;
+}

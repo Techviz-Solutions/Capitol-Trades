@@ -1,0 +1,245 @@
+/*senator info css*/
+
+.about {
+    margin: 15px 0 4px 0;
+    font-weight: bold;
+}
+
+.form-control.select {
+    position: absolute;
+    right: 15px;
+}
+
+.pl-15 {
+    padding-left: 15px;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.my-0 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.view-list{
+    width: 22px;
+}
+
+
+h5 {
+    font-weight: bold;
+}
+
+.senator-info-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+.trade-per-year span:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #d63743;
+}
+
+.i-Shopping-Cart, .i-Shopping-Basket, .i-Financial {
+    font-size: 40px;
+    color: #d63743;
+}
+
+.bg-white {
+    background: #ffffff;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+
+
+.commitee-list {
+    height: 238px;
+    overflow: auto;
+    list-style: inside;
+}
+
+.commitee-list li {
+    padding: 5px 0;
+}
+.commitee-list li a{
+    color:#23527c;
+}
+.companies-dropdown label {
+    position: absolute;
+    top: 5px;
+    font-size: 16px;
+    color: #d63743;
+    padding-left: 3px;
+}
+
+details {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+details summary {
+    display: block;
+}
+
+details summary:focus {
+    outline: none;
+}
+
+details[open] {
+    display: block;
+    animation: open .2s linear;
+}
+
+details #open {
+    padding-left: 5px;
+    text-align: center;
+    color: #23527c;
+    text-decoration: underline;
+}
+#close, #open {
+    cursor: pointer;
+}
+details #close {
+  /*  display: none;*/
+    color: #23527c;
+    display: inline-block;
+    padding-left: 5px;
+    text-decoration: underline;
+}
+
+::-webkit-details-marker {
+    display: none;
+}
+.profile-img{
+    border-radius: 6px;
+}
+
+/*senator info css end*/
+
+.sort-by {
+    position: absolute;
+    bottom: 4%;
+    right: 8%;
+}
+
+.sort-by:before,
+.sort-by:after {
+    border: 4px solid transparent;
+    content: '';
+    display: block;
+    height: 0;
+    right: 5px;
+    top: 50%;
+    width: 0;
+}
+
+.sort-by:before {
+    border-bottom-color: #666;
+    margin-top: -9px;
+}
+
+.sort-by:after {
+    border-top-color: #666;
+    margin-top: 1px;
+}
+
+.footer-notes {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.progress-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+/*new changes*/
+.custom-table td:nth-child(1) th:nth-child(1) {
+    flex-grow: 2;
+}
+
+.notable-purchase td:nth-child(1) th:nth-child(1), .significant-sell td:nth-child(1) th:nth-child(1) {
+    flex-grow: 1;
+}
+
+.card-body-for-table {
+    min-height: 580px;
+}
+.tenure {
+    display: inline-block;
+    width: 150px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+.table-custom {
+    height: calc(100% - 120px);
+}
+.form-select{
+    font-size: 14px;
+}
+.most-purchased-table th:nth-child(1), .most-purchased-table  td:nth-child(1){
+    flex: 1.5;
+}
+.most-purchased-table th:nth-child(4), .most-purchased-table  td:nth-child(4){
+    flex: 1.3;
+}
+.most-purchased-table th:nth-child(5), .most-purchased-table  td:nth-child(5){
+   position: relative;
+    left: 10px;
+}
+.most-purchased-table tr th{
+    white-space: normal;
+}
+@media(min-width: 1220px){
+    .table-height-stock tbody tr td{
+        max-width: 170px;
+    }
+}
+@media(max-width: 1440px) and (min-width: 1220px){
+    .table-height-stock tbody tr td{
+        max-width: 130px;
+    }
+}
+@media  (max-width: 768px) {
+    .form-select{
+        width: 170px;
+        font-size: 12px;
+    }
+}
+
+
+
+.overlay {
+    height: 100vh;
+    width: 100%;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    position: fixed;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+

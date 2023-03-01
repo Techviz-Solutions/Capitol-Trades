@@ -1,0 +1,85 @@
+<!--that dialog for home page-->
+
+<p-dialog [(visible)]="displayFilterDialog" [modal]="true" [draggable]="false" [style]="{width: '80vw'}"
+          [resizable]="false" header="Filters">
+    <div class=" p-t-15 p-b-15">
+        <div class="form-select">
+            <label>Politician</label>
+            <!--                <ng-select [(ngModel)]="selectedPoliticianNames"-->
+            <!--                           [items]="suggestedPoliticians" placeholder="Select Senator / Representative" appendTo="body" [searchable]="false">-->
+            <!--                </ng-select>-->
+            <p-multiSelect [options]="suggestedPoliticianNames" [(ngModel)]="selectedPoliticianNames"
+                           [virtualScroll]="true" itemSize="30" optionLabel="name" appendTo="body" #dd>
+            </p-multiSelect>
+        </div>
+    </div>
+    <div class=" p-t-15 p-b-15">
+        <div class="form-select">
+            <label>Stock / Issuer</label>
+            <p-multiSelect [options]="suggestedIssuerNames" [(ngModel)]="selectedIssuerNames" [virtualScroll]="true"
+                           appendTo="body" itemSize="30" optionLabel="name" #dd>
+
+            </p-multiSelect>
+            <!--   <ng-select [(ngModel)]="selectedIssuerName"
+                          [items]="suggestionsIssuers" [virtualScroll]="true"
+                          placeholder="Select Stock / Issuer" appendTo="body" [searchable]="false">
+                   <ng-template let-item="item" ng-option-tmp>
+                       <div title="{{item}}">{{item}}</div>
+                   </ng-template>
+               </ng-select>-->
+        </div>
+    </div>
+    <p-footer>
+        <a style="cursor: pointer; margin-right: 15px;position: relative;
+    top: 2px;
+    font-size: 12px;" (click)="clearFilters('home')"> Clear Filters</a>
+        <button (click)="applyChanges('home')" class="btn btn-primary btn-sm" type="button">Apply</button>
+    </p-footer>
+</p-dialog>
+
+<!--that dialog for issuer page-->
+
+<p-dialog [(visible)]="displayFilterDialogForIssuer" [modal]="true" [draggable]="false" [style]="{width: '80vw'}"
+          [resizable]="false" header="Filters">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 bg-white p-t-15 p-b-15 sm-pt-0 sm-pb-0">
+            <div class="form-select">
+                <label>Politician</label>
+                <ng-select [(ngModel)]="selectedPoliticianNames"
+                           [items]="senatorSuggestionsForIssuer" placeholder="Select Senator / Representative"
+                           appendTo="body" [searchable]="false">
+                </ng-select>
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <a style="cursor: pointer; margin-right: 15px;position: relative;
+    top: 2px;
+    font-size: 12px;" (click)="clearFilters('issuer')"> Clear Filters</a>
+        <button (click)="applyChanges('issuer')" class="btn btn-primary btn-sm" type="button">Apply</button>
+    </p-footer>
+</p-dialog>
+
+<!--that dialog for politician page-->
+
+<p-dialog [(visible)]="displayFilterDialogForPolitician" [modal]="true" [draggable]="false" [style]="{width: '80vw'}"
+          [resizable]="false" header="Filters">
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 bg-white p-t-15 p-b-15 sm-pt-0 sm-pb-0">
+        <div class="form-select">
+            <label>Stock / Issuer</label>
+            <ng-select [(ngModel)]="selectedIssuerNames"
+                       [items]="issuerSuggestionsForPolitician" [virtualScroll]="true"
+                       placeholder="Select Stock / Issuer" appendTo="body" [searchable]="false">
+                <ng-template let-item="item" ng-option-tmp>
+                    <div title="{{item}}">{{item}}</div>
+                </ng-template>
+            </ng-select>
+        </div>
+    </div>
+    <p-footer>
+        <a style="cursor: pointer; margin-right: 15px;position: relative;
+    top: 2px;
+    font-size: 12px;" (click)="clearFilters('politician')"> Clear Filters</a>
+        <button (click)="applyChanges('politician')" class="btn btn-primary btn-sm" type="button">Apply</button>
+    </p-footer>
+</p-dialog>

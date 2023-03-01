@@ -1,0 +1,31 @@
+<div class="sidebar-main text-center">
+    <ul class="navigation-left">
+        <li class="nav-item" data-item="dashboard">
+            <a class="nav-item-hold" href="https://www.capitoltrades.com/">
+                <img class="logo" src="assets/images/CapitolTrades_web.png">
+                <span *ngIf="!isProdEvn" class="badge staging">staging</span>
+            </a>
+        </li>
+        <li class="nav-item" data-item="dashboard">
+            <a [routerLinkActiveOptions]="{exact:true}" class="nav-item-hold" routerLink="/trades"
+               routerLinkActive="active">
+                <i class="nav-icon i-Bar-Chart"></i><span class="nav-text">Trades</span>
+            </a>
+            <div class="triangle"></div>
+        </li>
+        <li class="nav-item hidden-sm hidden-xs" data-item="dashboard">
+            <a class="nav-item-hold" routerLink="/analytics" routerLinkActive="active">
+                <img class="analytics-img" height="32px" src="assets/images/monitor-1.png" width="32px">
+                <img class="analytics-img-active" height="32px" src="assets/images/monitor.png" width="32px">
+                <br> <span
+                    class="nav-text">Analytics</span>
+            </a>
+        </li>
+    </ul>
+    <a *ngIf="!isProdEvn" class="btn btn-danger switch-button" matTooltip="Switch to Prod"
+       href="http://ui.senator.2iq.eu" target="_blank" type="button">
+       <span class="material-icons">
+swap_horiz
+</span>
+    </a>
+</div>

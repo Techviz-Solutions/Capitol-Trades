@@ -1,0 +1,299 @@
+service: ${self:custom.product}-${self:custom.component}
+
+frameworkVersion: '>=2.5.0 <3.0.0'
+
+plugins:
+  - serverless-plugin-git-variables
+  - '@2iq/serverless-plugin-ib2'
+
+provider:
+  name: aws
+  region: ${opt:region, 'eu-central-1'}
+  stage: ${opt:stage, 'staging'}
+  profile: ${opt:aws-profile, 'sandbox'}
+  deploymentBucket:
+    name: ${ib2:base.deploymentBucket()}
+  deploymentPrefix: ${ib2:base.deploymentPrefix()}
+  stackTags:
+    Env: ${self:provider.stage}
+
+custom:
+  product: senator
+  component: frontend
+
+  commonCloudFrontDistributionConfig: &commonCfConfig
+    Enabled: true
+    Comment: ${self:service}-${self:provider.stage}
+    Origins:
+      - Id: s3-product-bucket-origin
+        DomainName: ${ib2:base.productBucket()}.s3.${self:provider.region}.amazonaws.com
+        OriginPath: /${self:provider.stage}/${self:custom.component}/cloudfront
+        S3OriginConfig:
+          OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${WebsiteOriginAccessIdentity}
+    DefaultCacheBehavior: &commonCfDefaultCacheBehavior
+      TargetOriginId: s3-product-bucket-origin
+      ViewerProtocolPolicy: redirect-to-https
+      Compress: true
+      ForwardedValues:
+        QueryString: false
+      AllowedMethods:
+        - HEAD
+        - GET
+        - OPTIONS
+      CachedMethods:
+        - HEAD
+        - GET
+        - OPTIONS
+      FunctionAssociations:
+        - EventType: viewer-response
+          FunctionARN: !Ref SecurityHeadersFunction
+    DefaultRootObject: index.html
+    HttpVersion: http2
+    IPV6Enabled: true
+    Logging:
+      Bucket: ${ib2:base.productBucket()}.s3.${self:provider.region}.amazonaws.com
+      Prefix: ${self:provider.stage}/${self:custom.component}/logs/cloudfront/
+      IncludeCookies: false
+    ViewerCertificate: &commonCfViewerCertificate
+      SslSupportMethod: sni-only
+      MinimumProtocolVersion: TLSv1.2_2019
+
+resources:
+  - ${ib2:description}
+
+  - ${ib2:conditions--basic-deploy-context}
+  - ${ib2:conditions--classic-hostname}
+
+  - Resources:
+      SecurityHeadersFunction:
+        Type: AWS::CloudFront::Function
+        Properties:
+          Name: ${self:custom.product}-${self:custom.component}-security-headers-${self:provider.stage}
+          AutoPublish: true
+          FunctionCode: |
+            function handler(event) {
+              var response = event.response;
+              var headers = response.headers;
+
+              headers['strict-transport-security'] = {value: 'max-age=63072000; includeSubdomains; preload'};
+              headers['x-frame-options'] = {value: 'DENY'};
+              headers['x-xss-protection'] = {value: '1; mode=block'};
+              headers['referrer-policy'] = {value: 'origin'};
+              headers['x-content-type-options'] = {value: 'nosniff'};
+
+              return response;
+            }
+          FunctionConfig:
+            Comment: Add security headers.
+            Runtime: cloudfront-js-1.0
+
+  - Resources:
+      WebsiteOriginAccessIdentity:
+        Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+        Properties:
+          CloudFrontOriginAccessIdentityConfig:
+            Comment: ${self:service}-${self:provider.stage} access identity
+
+      BackofficeDistribution:
+        Type: AWS::CloudFront::Distribution
+        Properties:
+          DistributionConfig:
+            <<: *commonCfConfig
+            Aliases:
+              - ${self:custom.component}.${self:custom.product}.${self:provider.stage}.${self:provider.region}.${ssm:/ib2/aws/accountDomainName}
+
+              - !If [IsMasterAccountAndProdEnv, '${self:custom.product}.2iq.eu', !Ref 'AWS::NoValue']
+              - !If [IsMasterAccountAndStagingEnv, '${self:custom.product}.x2iq.com', !Ref 'AWS::NoValue']
+
+              - !If [IsMasterAccountAndProdEnv, 'ui.${self:custom.product}.2iq.eu', !Ref 'AWS::NoValue']
+              - !If [IsMasterAccountAndStagingEnv, 'safe-testing.${self:custom.product}.x2iq.com', !Ref 'AWS::NoValue']
+              - !If [IsMasterAccountAndRcEnv, 'danger-testing.${self:custom.product}.x2iq.com', !Ref 'AWS::NoValue']
+            ViewerCertificate:
+              <<: *commonCfViewerCertificate
+              AcmCertificateArn: ${cf.us-east-1:${self:custom.product}-certificates-${self:provider.stage}.FrontendBackofficeCertificateArn}
+          Tags:
+            - Key: Env
+              Value: ${self:provider.stage}
+
+      BackofficeHostname:
+        Type: AWS::Route53::RecordSet
+        Properties:
+          HostedZoneName: ${ssm:/ib2/aws/accountDomainName}.
+          Name: ${self:custom.component}.${self:custom.product}.${self:provider.stage}.${self:provider.region}.${ssm:/ib2/aws/accountDomainName}
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt BackofficeDistribution.DomainName
+
+      BackofficeHostnameIpv6:
+        Type: AWS::Route53::RecordSet
+        Properties:
+          HostedZoneName: ${ssm:/ib2/aws/accountDomainName}.
+          Name: ${self:custom.component}.${self:custom.product}.${self:provider.stage}.${self:provider.region}.${ssm:/ib2/aws/accountDomainName}
+          Type: AAAA
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt BackofficeDistribution.DomainName
+
+  - Resources:
+      BackofficeClassicProdHostname:
+        Type: AWS::Route53::RecordSet
+        Condition: CreateClassicProdRecord
+        Properties:
+          HostedZoneId: Z2JJXPV45H35G2  # 2iq.eu
+          Name: ui.${self:custom.product}.2iq.eu
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt BackofficeDistribution.DomainName
+
+      BackofficeClassicProdHostnameIpv6:
+        Type: AWS::Route53::RecordSet
+        Condition: CreateClassicProdRecord
+        Properties:
+          HostedZoneId: Z2JJXPV45H35G2  # 2iq.eu
+          Name: ui.${self:custom.product}.2iq.eu
+          Type: AAAA
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt BackofficeDistribution.DomainName
+
+      BackofficeClassicRcHostname:
+        Type: AWS::Route53::RecordSet
+        Condition: CreateClassicRcRecord
+        Properties:
+          HostedZoneId: Z2JJXPV45H35G2  # 2iq.eu
+          Name: danger-testing.${self:custom.product}.2iq.eu
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt BackofficeDistribution.DomainName
+
+      BackofficeClassicRcHostnameIpv6:
+        Type: AWS::Route53::RecordSet
+        Condition: CreateClassicRcRecord
+        Properties:
+          HostedZoneId: Z2JJXPV45H35G2  # 2iq.eu
+          Name: danger-testing.${self:custom.product}.2iq.eu
+          Type: AAAA
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt BackofficeDistribution.DomainName
+
+      BackofficeClassicStagingHostname:
+        Type: AWS::Route53::RecordSet
+        Condition: CreateClassicStagingRecord
+        Properties:
+          HostedZoneId: ZIG7BY52GHQIM  # x2iq.com
+          Name: safe-testing.${self:custom.product}.x2iq.com
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt BackofficeDistribution.DomainName
+
+      BackofficeClassicStagingHostnameIpv6:
+        Type: AWS::Route53::RecordSet
+        Condition: CreateClassicStagingRecord
+        Properties:
+          HostedZoneId: ZIG7BY52GHQIM  # x2iq.com
+          Name: safe-testing.${self:custom.product}.x2iq.com
+          Type: AAAA
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt BackofficeDistribution.DomainName
+
+      BackofficeClassicShortProdHostname:
+        Type: AWS::Route53::RecordSet
+        Condition: CreateClassicProdRecord
+        Properties:
+          HostedZoneId: Z2JJXPV45H35G2  # 2iq.eu
+          Name: ${self:custom.product}.2iq.eu
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt BackofficeDistribution.DomainName
+
+      BackofficeClassicShortProdHostnameIpv6:
+        Type: AWS::Route53::RecordSet
+        Condition: CreateClassicProdRecord
+        Properties:
+          HostedZoneId: Z2JJXPV45H35G2  # 2iq.eu
+          Name: ${self:custom.product}.2iq.eu
+          Type: AAAA
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt BackofficeDistribution.DomainName
+
+      BackofficeClassicShortStagingHostname:
+        Type: AWS::Route53::RecordSet
+        Condition: CreateClassicStagingRecord
+        Properties:
+          HostedZoneId: ZIG7BY52GHQIM  # x2iq.com
+          Name: ${self:custom.product}.x2iq.com
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt BackofficeDistribution.DomainName
+
+      BackofficeClassicShortStagingHostnameIpv6:
+        Type: AWS::Route53::RecordSet
+        Condition: CreateClassicStagingRecord
+        Properties:
+          HostedZoneId: ZIG7BY52GHQIM  # x2iq.com
+          Name: ${self:custom.product}.x2iq.com
+          Type: AAAA
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt BackofficeDistribution.DomainName
+
+      PublicDistribution:
+        Type: AWS::CloudFront::Distribution
+        Condition: IsMasterAccountAndProdEnv
+        Properties:
+          DistributionConfig:
+            <<: *commonCfConfig
+            Aliases:
+              - app.capitoltrades.com
+            ViewerCertificate:
+              <<: *commonCfViewerCertificate
+              AcmCertificateArn: ${cf.us-east-1:${self:custom.product}-certificates-${self:provider.stage}.FrontendPublicCertificateArn, 'No cert found'}
+          Tags:
+            - Key: Env
+              Value: ${self:provider.stage}
+
+      AppCapitoltradesComDnsRecord:
+        Type: AWS::Route53::RecordSet
+        Condition: IsMasterAccountAndProdEnv
+        Properties:
+          HostedZoneName: capitoltrades.com.
+          Name: app.capitoltrades.com
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt PublicDistribution.DomainName
+
+      AppCapitoltradesComDnsRecordIpv6:
+        Type: AWS::Route53::RecordSet
+        Condition: IsMasterAccountAndProdEnv
+        Properties:
+          HostedZoneName: capitoltrades.com.
+          Name: app.capitoltrades.com
+          Type: AAAA
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2  # CloudFront HostedZoneId - AWS given
+            DNSName: !GetAtt PublicDistribution.DomainName
+
+      JenkinsJob:
+        Type: Custom::JenkinsJob
+        Properties:
+          ServiceToken: ${cf:cf-resources-jenkins-job-global.Arn}
+          projectName: ${self:service}
+          environment: ${self:provider.stage}
+
+  - Outputs:
+      BackofficeDistributionId:
+        Value: !Ref BackofficeDistribution
+
+      PublicDistributionId:
+        Condition: IsMasterAccountAndProdEnv
+        Value: !Ref PublicDistribution

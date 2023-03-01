@@ -1,0 +1,14 @@
+{
+  "description": "Deploys and removes cloudformation stack.",
+  "devDependencies": {
+    "@2iq/serverless-plugin-ib2": "6.4.0",
+    "serverless": "2.59.0",
+    "serverless-plugin-git-variables": "5.1.0"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "deploy": "npm install --no-package-lock && sls deploy --verbose",
+    "remove": "npm install --no-package-lock && sls remove --verbose"
+  }
+}

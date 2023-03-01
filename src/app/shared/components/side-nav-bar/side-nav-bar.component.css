@@ -1,0 +1,79 @@
+/*sidebar css*/
+.sidebar-main {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: #ffffff;
+  box-shadow: 0 4px 20px 1px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.08);
+  z-index: 1;
+}
+
+.navigation-left {
+  list-style: none;
+  text-align: center;
+  width: 125px;
+  height: calc(100% - 70px);
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  position: relative;
+  display: block;
+  width: 100%;
+  color: #d63743;
+  cursor: pointer;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.nav-item a.active {
+  color: #23527c;
+}
+.nav-item:focus a {
+  outline: none;
+}
+.nav-item a {
+  display: block;
+  width: 100%;
+  padding: 26px 0;
+  color: #47404f;
+  text-decoration: none;
+}
+
+
+
+@font-face {
+  font-family: 'iconsmind';
+  src: url('../../../../assets/fonts/iconsmind.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.nav-icon {
+  font-family: 'iconsmind' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  font-size: 32px;
+  height: 32px;
+  width: 32px;
+  display: block;
+  margin: 0 auto 6px;
+}
+.analytics-img-active, .nav-item-hold.active .analytics-img  {
+  display: none;
+}
+.nav-item-hold.active .analytics-img-active {
+    display: inline;
+  }
+
+.i-Bar-Chart:before {
+  content: '\efd2';
+}
+
+/*sidebar css end*/

@@ -1,0 +1,102 @@
+td:nth-child(1), th:nth-child(1) {
+    flex-grow: 2;
+}
+
+td:nth-child(4), th:nth-child(4) {
+    flex-grow: 1.5;
+}
+
+.card-body-for-table {
+    min-height: 560px;
+    overflow: unset;
+}
+
+/*.card-body-for-table .table-custom {
+    overflow: auto;
+}*/
+
+.most-traded .table-custom {
+    height: 100%;
+}
+
+.loader-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.sector-name {
+    cursor: pointer;
+}
+
+.highlight-issuerName {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.pagination {
+    margin: 10px;
+    text-align: right;
+    width: 98%;
+}
+
+.table-custom {
+    /*height: calc(100% - 120px);*/
+    overflow: unset;
+}
+
+.no-data-for-analytics {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    position: absolute;
+    left: 40%;
+    margin-top: 100px;
+}
+.view-list{
+    width: 22px;
+}
+
+.no-data-for-analytics img {
+    height: 130px;
+    width: 130px;
+}
+.modal-table .info-button.ellipses {
+    width: 46%;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 10px;
+}
+
+
+#sAndP500Chart-div {
+    height: 400px;
+}
+.details th:nth-child(5), .details td:nth-child(5){
+    position: relative;
+    left: 10px;
+}
+
+@media(min-width: 1220px){
+    .table-custom tbody tr td{
+        max-width: 170px;
+    }
+}
+@media(max-width: 1440px){
+    .sector-trade-modal ::ng-deep.ui-widget-content{
+        width: 60vw!important;
+    }
+}
+@media(max-width: 1024px){
+    .sector-trade-modal ::ng-deep.ui-widget-content{
+        width: 80vw!important;
+    }
+}

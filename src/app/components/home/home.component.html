@@ -1,0 +1,858 @@
+<!--<input id="toggle" name="toggle" type="checkbox"/>-->
+<!--<label for="toggle">-->
+<!--    <img matTooltip="show" src="assets/images/down-arrow.png" width="17px">-->
+<!--    <img matTooltip="hide" src="assets/images/upload.png" width="17px">-->
+<!--</label>-->
+<!--<div class=" message hidden-sm hidden-xs hidden-md-mini">-->
+<!--    <div class="bg-white">-->
+<!--        <div class="container">-->
+<!--            <h3 class="text-xs-center">Filter US Politician Trades</h3>-->
+<!--            <div class="row">-->
+<!--                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 bg-white p-t-15 p-b-15">-->
+<!--                    <div class="form-select">-->
+<!--                        <label>Politician</label>-->
+<!--                        <ng-select (change)="searchTrades()" [(ngModel)]="selectedSenatorName"-->
+<!--                                   [items]="senatorSuggestions" placeholder="Select Senator / Representative">-->
+<!--                            <ng-template let-item="item" ng-option-tmp>-->
+<!--                                <div [title]="item">{{item}}</div>-->
+<!--                            </ng-template>-->
+<!--                        </ng-select>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 bg-white p-t-15 p-b-15">-->
+<!--                    <div class="form-select">-->
+<!--                        <label>Stock / Issuer</label>-->
+<!--                        <ng-select (change)="searchTrades()" [(ngModel)]="selectedIssuerName"-->
+<!--                                   [items]="issuerSuggestions" [virtualScroll]="true"-->
+<!--                                   placeholder="Select Stock / Issuer">-->
+<!--                            <ng-template let-item="item" ng-option-tmp>-->
+<!--                                <div [title]="item">{{item}}</div>-->
+<!--                            </ng-template>-->
+<!--                        </ng-select>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 bg-white p-t-15 p-b-15">-->
+<!--                    <div class="form-select multi-select">-->
+
+<!--                        <mat-form-field floatLabel="always">-->
+<!--                            <mat-label>Asset Class</mat-label>-->
+<!--                            <mat-select (selectionChange)="searchTrades()" [(ngModel)]="selectedShareType" multiple-->
+<!--                                        placeholder="Select Asset Class">-->
+<!--                                <mat-select-trigger>-->
+<!--                                    {{selectedShareType ? selectedShareType[0] : ''}}-->
+<!--                                    <span *ngIf="selectedShareType?.length > 1" class="example-additional-selection">-->
+<!--                                  (+{{selectedShareType.length - 1}} {{selectedShareType?.length === 2 ? 'other' : 'others'}}-->
+<!--                                        )-->
+<!--                                       </span>-->
+<!--                                </mat-select-trigger>-->
+<!--                                <mat-option *ngFor="let type of shareTypes" [value]="type">{{type}}</mat-option>-->
+<!--                            </mat-select>-->
+<!--                        </mat-form-field>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 bg-white p-t-15 p-b-15">-->
+<!--                    <div class="form-select multi-select">-->
+
+<!--                        <mat-form-field floatLabel="always">-->
+<!--                            <mat-label>Transaction Type</mat-label>-->
+<!--                            <mat-select (selectionChange)="searchTrades()" [(ngModel)]="selectedTradeType" multiple-->
+<!--                                        placeholder="Select Transaction Type">-->
+<!--                                <mat-select-trigger>-->
+<!--                                    {{selectedTradeType ? selectedTradeType[0] : ''}}-->
+<!--                                    <span *ngIf="selectedTradeType?.length > 1" class="example-additional-selection">-->
+<!--                                  (+{{selectedTradeType.length - 1}} {{selectedTradeType?.length === 2 ? 'other' : 'others'}}-->
+<!--                                        )-->
+<!--                                       </span>-->
+<!--                                </mat-select-trigger>-->
+<!--                                <mat-option *ngFor="let type of tradeTypes" [value]="type">{{type}}</mat-option>-->
+<!--                            </mat-select>-->
+<!--                        </mat-form-field>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="row">-->
+<!--                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 bg-white p-t-15 p-b-15">-->
+<!--                    <div class="form-select">-->
+<!--                        <label>Filling Date</label>-->
+<!--                        <input (change)="onFillingRangeSelection($event)" [customRangeDirection]="false"-->
+<!--                               [locale]="{format: 'DD/MMM/YYYY'}" [showClearButton]="true"-->
+<!--                               [showDropdowns]="true"-->
+<!--                               class="form-control"-->
+<!--                               ngxDaterangepickerMd-->
+<!--                               placeholder="From - To"-->
+<!--                               showCancel="true"-->
+<!--                               type="text"-->
+<!--                        />-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 bg-white p-t-15 p-b-15">-->
+<!--                    <div class="form-select">-->
+<!--                        <label>Transaction Date</label>-->
+<!--                        <input (change)="onTransactionRangeSelection($event)" [customRangeDirection]="false"-->
+<!--                               [locale]="{format: 'DD/MMM/YYYY'}" [showClearButton]="true"-->
+<!--                               [showDropdowns]="true"-->
+<!--                               class="form-control"-->
+<!--                               ngxDaterangepickerMd-->
+<!--                               placeholder="From - To"-->
+<!--                               showCancel="true"-->
+<!--                               type="text"-->
+<!--                        />-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 bg-white p-t-15 p-b-15">-->
+<!--                    <div class="form-select">-->
+<!--                        <label>Congress Type</label>-->
+<!--                        <ng-select (change)="searchTrades()" (remove)="searchTrades()"-->
+<!--                                   [(ngModel)]="selectedCongressType"-->
+<!--                                   [items]="congressTypes" placeholder="Select Congress Type"></ng-select>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 bg-white p-t-15 p-b-15">-->
+<!--                    <div class="form-select">-->
+<!--                        <label>Political Party</label>-->
+<!--                        <ng-select (change)="searchTrades()" (remove)="searchTrades()"-->
+<!--                                   [(ngModel)]="selectedPartyType"-->
+<!--                                   [items]="politicianParties" placeholder="Select Political Party"></ng-select>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--            </div>-->
+<!--            &lt;!&ndash;            <button class="btn btn-danger pull-right" type="button">Apply Filters</button>&ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<app-banner></app-banner>
+<div class="visible-sm visible-xs navbar-mobile visible-md-mini" style="margin-bottom: 6px;">
+    <mat-toolbar>
+        <div>
+        <span class="nav-item-hold" style="margin-right: 30px;">
+                 <a href="https://www.capitoltrades.com/"
+                    routerLinkActive="active"><img class="logo" src="assets/images/CapitolTrades_web.png"
+                                                   style="display: inline-block;"></a>
+            </span>
+            <!-- <span class="example-spacer"></span>
+             <button mat-icon-button routerLink="/trades"
+                     routerLinkActive="active">
+                 <mat-icon>moving</mat-icon>
+                 <a class="nav-text">Trades</a>
+             </button>-->
+        </div>
+        <button color="primary" class="filter-btn" (click)="showFiltersModel()"
+                mat-mini-fab>
+            <span class="pi pi-filter-icon pi-filter"></span>
+        </button>
+    </mat-toolbar>
+</div>
+
+<div class="container-fluid main-dashboard">
+    <div class="row">
+        <div class="col-md-12 my-15 xs-p-0 xs-my-0">
+            <div class="card card-mobile">
+                <div class="card-body-for-table">
+                    <div class="card-title hidden-xs hidden-sm hidden-md-mini"><span>Politician Trades</span>
+                        <button (click)="showModalDialog()" color="primary"
+                                mat-mini-fab>
+                            <span class="pi pi-filter-icon pi-filter"></span>
+                        </button>
+                    </div>
+                    <!--<div class="chip-filter">
+                        <mat-chip-list aria-label="Fish selection">
+                            <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable"
+                                      [removable]="removable" (removed)="remove(fruit)">
+                                {{fruit.name}}
+                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                            </mat-chip>
+                        </mat-chip-list>
+                        <a style="cursor: pointer; margin-right: 15px; position: relative; top: 2px; font-size: 12px;margin-left: 10px;">
+                            Clear All</a>
+                    </div>-->
+                    <div *ngIf="senatorTrades?.length == 0" class="no-data">
+                        <img src="assets/images/CapitolTrades_.png">
+                        <span>No Activity Reported</span>
+                    </div>
+                    <div *ngIf="senatorTrades?.length !== 0">
+                        <div class="senator-table">
+                            <table class="table desktop-table hidden-sm hidden-xs hidden-md-mini">
+                                <thead>
+                                <tr>
+                                    <th appShowIfEllipsis pTooltip="Publication Date" tooltipPosition="top">Publication
+                                        Date
+                                    </th>
+                                    <th appShowIfEllipsis pTooltip="Politician" tooltipPosition="top">Politician</th>
+                                    <th appShowIfEllipsis pTooltip="Owner" tooltipPosition="top">Owner</th>
+                                    <th appShowIfEllipsis pTooltip="Issuer/Asset" tooltipPosition="top">Issuer/Asset
+                                    </th>
+                                    <th appShowIfEllipsis pTooltip="Ticker" tooltipPosition="top">Ticker
+                                    </th>
+                                    <th appShowIfEllipsis pTooltip="Transaction Date" tooltipPosition="top"
+                                        class="text-overflow-normal">Transaction
+                                        Date
+                                    </th>
+                                    <th appShowIfEllipsis pTooltip="Transaction Type" tooltipPosition="top"
+                                        class="text-overflow-normal">Transaction
+                                    </th>
+                                    <!--         <th appShowIfEllipsis pTooltip="Asset Class" tooltipPosition="top">
+                                                 Asset Class
+                                             </th>-->
+                                    <!--                                    <th appShowIfEllipsis pTooltip="Financial Instrument" tooltipPosition="top">-->
+                                    <!--                                        Financial Instrument-->
+                                    <!--                                    </th>-->
+                                    <th class="text-right" appShowIfEllipsis pTooltip="Shares" tooltipPosition="top">
+                                        Shares
+                                    </th>
+                                    <th class="text-right" appShowIfEllipsis pTooltip="Share Price"
+                                        tooltipPosition="top">Share Price
+                                    </th>
+                                    <th class="text-right" appShowIfEllipsis pTooltip="Value" tooltipPosition="top">
+                                        Value
+                                    </th>
+                                    <th appShowIfEllipsis pTooltip="Attachments" tooltipPosition="top">URL</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr *ngFor="let trade  of senatorTrades | paginate: TablePageConfig">
+                                    <td appShowIfEllipsis
+                                        pTooltip="{{ trade?.publicationDate?.split(' ')[0] | date: 'dd/MMM/yyyy' }}"
+                                        tooltipPosition="top">{{ trade?.publicationDate | date: 'dd/MMM/yyyy'}}</td>
+                                    <td>
+                                        <!-- <span class="party-symbol" *ngIf="trade.party == 'Democratic'">
+                                             <img src="../../../assets/images/democratic.png">
+                                         </span>
+                                         <span class="party-symbol" *ngIf="trade.party == 'Republican'">
+                                             <img src="../../../assets/images/republican.png">
+                                         </span>-->
+                                        <a (click)="storeClickedPoliticianName(trade.politicianName)"
+
+                                           [routerLink]="['/politician-info', trade.biographyId]"
+                                           class="info-button ellipses"
+                                           routerLinkActive="active">
+                                            <span class="senator-name-ellipses" #popoverTrigger="mdePopoverTrigger"
+                                                  [mdePopoverTriggerFor]="appPopover">{{ trade?.politicianName  }}</span>
+                                            <!--  <div [ngClass]="trade.congressType == 'Senator' ? 'congType senator' : 'congType representative'">
+                                                  ({{ trade.congressType }})
+                                              </div>-->
+                                        </a>
+                                        <span *ngIf="trade.congressType === 'Representative'"
+                                              class="party-symbol republican republican-party">
+                                                     <span>Rep ({{trade?.party === 'Democrat' ? 'D' :
+                                                         trade?.party === 'Republican' ? 'R' : 'O'}}
+                                                         - {{trade?.stateShortName}})</span>
+                                        </span>
+                                        <span *ngIf="trade.congressType === 'Senator'"
+                                              class="party-symbol republican republican-party">
+                                                     <span>Sen ({{trade?.party === 'Democrat' ? 'D' :
+                                                         trade?.party === 'Republican' ? 'R' : 'O'}}
+                                                         - {{trade?.stateShortName}})</span>
+                                        </span>
+                                        <!--                                        <span *ngIf="trade.party === 'Democrat'"-->
+                                        <!--                                              class="party-symbol democratic democrat-party">-->
+                                        <!--                                                <span *ngIf="trade.congressType === 'Senator'">S</span>-->
+                                        <!--                                                    <span *ngIf="trade.congressType === 'Representative'">R</span>-->
+                                        <!--                                                 <span>D</span>-->
+                                        <!--                                                </span>-->
+                                        <!--                                        <span *ngIf="trade.party === 'Independent' || trade.party === 'Other'"-->
+                                        <!--                                              class="party-symbol other-party">-->
+                                        <!--                                                        <span *ngIf="trade.congressType === 'Senator'">S</span>-->
+                                        <!--                                                            <span *ngIf="trade.congressType === 'Representative'">R</span>-->
+                                        <!--                                                            <span>O</span>-->
+                                        <!--                                        </span>-->
+                                        <!--       <span *ngIf="trade.congressType === 'Senator'"
+                                                     class="party-symbol democratic"
+                                                     [ngClass]="{'republican-party':trade.party === 'Republican',
+                                                      'democrat-party': (trade.party === 'Democratic' ||  trade.party === 'Democrat' ),
+                                                      'other-party':(trade.party === 'Independent' ||  trade.party === 'Other')}">S</span>
+                                               <span *ngIf="trade.congressType === 'Representative'"
+                                                     class="party-symbol republican" [ngClass]="{'republican-party':trade.party === 'Republican',
+                                                      'democrat-party': (trade.party === 'Democratic' ||  trade.party === 'Democrat' ),
+                                                      'other-party':(trade.party === 'Independent' ||  trade.party === 'Other')}">R</span>
+
+                                               <span *ngIf="trade.party === 'Republican'"
+                                                     class="party-symbol democratic"
+                                                     [ngClass]="{'republican-party':trade.party === 'Republican'}">R</span>
+
+                                               <span *ngIf="trade.party === 'Democratic'"
+                                                     class="party-symbol republican" [ngClass]="{
+                                                      'democrat-party': (trade.party === 'Democratic' ||  trade.party === 'Democrat' )}">D</span>
+
+                                               <span *ngIf="trade.party === 'Independent'"
+                                                     class="party-symbol republican"
+                                                     [ngClass]="{'other-party':(trade.party === 'Independent' ||  trade.party === 'Other')}">I</span>-->
+
+                                        <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false"
+                                                     mdePopoverPositionX="before" mdePopoverPositionY="above">
+                                            <div class="popover right">
+                                                <div class="arrow"></div>
+                                                <div class="popover-content">
+                                                    <div class="p-t-15 d-flex align-items-center">
+                                                        <!--                                                        <img [src]='trade?.politicianImage'/>-->
+                                                        <img [lazyLoad]='trade?.profileImage'/>
+                                                        <b>  {{ trade?.politicianName }}</b>
+                                                    </div>
+                                                    <div>
+                                                        <table border="0" class="popover-table">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td><b> Office: </b></td>
+                                                                <td><span> {{ trade?.congressType }} </span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b> Party: </b></td>
+                                                                <td><span> {{ trade?.party }} </span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b> State: </b></td>
+                                                                <td><span> {{trade?.state}} </span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b> Tenure: </b></td>
+                                                                <td><span>  {{ trade?.tenure}} </span></td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <!--    <div class="my-15">
+                                                            <b>Party: </b>&nbsp; <span>{{ trade?.party }}</span>
+                                                        </div>
+                                                        <div class="my-15">
+                                                            <b>Office:</b>&nbsp; <span>{{ trade?.congressType }}</span>
+                                                        </div>
+                                                        <div class="my-15">
+                                                            <b>State: </b>&nbsp; <span>{{trade?.state}}</span>
+                                                        </div>
+                                                        <div class="my-15 d-flex">
+                                                            <b>Tenure:</b>&nbsp; <span>{{ trade?.tenure}}</span>
+                                                        </div>-->
+
+                                                </div>
+                                            </div>
+                                        </mde-popover>
+                                    </td>
+                                    <td appShowIfEllipsis pTooltip="{{ trade.owner | titlecase }}"
+                                        tooltipPosition="top"> {{ trade.owner | titlecase }} </td>
+                                    <td>
+                                        <div appShowIfEllipsis pTooltip="{{ trade?.issuerName  }}"
+                                             tooltipPosition="top" class="overflow-ellipses">
+                                            <a *ngIf="!isGvkeyAvailable(trade)"
+                                               [queryParams]="{name: trade.issuerName}"
+                                               [routerLink]="['/issuer-info']">
+                                                {{ trade?.issuerName }} </a>
+                                            <!--                                        <span *ngIf="!isGvkeyAvailable(trade)"> {{ trade?.issuerName }} </span>-->
+                                            <a *ngIf="isGvkeyAvailable(trade)"
+                                               [routerLink]="['/issuer-info', trade.gvkey]">
+                                                {{ trade?.issuerName }} </a>
+                                        </div>
+                                    </td>
+                                    <td pTooltip="{{ trade?.originalIssuerName | removedSpacesFromString }}"
+                                        tooltipPosition="top">{{ ((trade?.ticker === '' || trade?.ticker === null) ? '--' : trade?.ticker)}}</td>
+                                    <td class="transaction-date" appShowIfEllipsis
+                                        pTooltip="{{ trade.transactionDate | date: 'dd/MMM/yyyy' }}"
+                                        tooltipPosition="top">{{ trade.transactionDate | date: "dd/MMM/yyyy"}} </td>
+
+                                    <td
+                                            appShowIfEllipsis
+                                            pTooltip="{{ trade?.tradeType | changeTradeType | uppercase }}"
+                                            tooltipPosition="top" class="text-overflow-normal">
+                                        <div style="display: flex;">
+                                            <img *ngIf="trade?.tradeType == 'Sale' || trade?.tradeType == 'Sale (Partial)' || trade?.tradeType == 'Sale (Full)'"
+                                                 width="20px" height="20px" src="assets/images/arrow-bottom.png">
+                                            <img *ngIf="trade?.tradeType == 'Purchase'" width="20px" height="20px"
+                                                 src="assets/images/arrow-up.png">
+                                            <img *ngIf="trade?.tradeType == 'Exchange'" width="20px" height="20px"
+                                                 src="assets/images/arrow-down-1.png">
+                                            <img *ngIf="trade?.tradeType == 'Received'" width="20px" height="20px"
+                                                 src="assets/images/arrow-up-2.png">
+                                            <span class="cursor-pointer"
+                                                  pTooltip="{{ trade?.tradeType === 'Sale (Partial)' || trade?.tradeType === 'Sale (Full)' ? (trade?.tradeType | uppercase)  + '\n' + (trade?.comment | commentsConvert) : trade?.comment }}"
+                                                  tooltipPosition="top" [tooltipDisabled]="!isHideSpan(trade)">
+                                        <span>{{ trade?.tradeType | changeTradeType | uppercase }} </span>
+                                        <span> {{(trade?.shareType === null || trade?.shareType === '') ?
+                                            '--' : '(' + (trade?.shareType) + ')' }}</span>
+                                                <span *ngIf="isHideSpan(trade)"
+                                                      class="steric">*</span>
+                                        </span>
+                                        </div>
+                                        <!--                                        <span-->
+                                        <!--                                            *ngIf="trade?.comment !== '&#45;&#45;' && trade?.comment !== null && trade?.comment !== ''"-->
+                                        <!--                                            class="com-icon"><img-->
+                                        <!--                                            pTooltip="{{ trade?.comment }}" src="assets/images/comment.png"-->
+                                        <!--                                            tooltipPosition="top"></span>-->
+                                    </td>
+
+                                    <!--    <td appShowIfEllipsis pTooltip="{{ trade?.shareType }}"
+                                            tooltipPosition="top">
+                                            <span>{{((trade?.shareType === null || trade?.shareType === '') ? '&#45;&#45;' : trade?.shareType)}}</span>
+                                            &lt;!&ndash;                                        <span *ngIf="trade?.originalIssuerName !== '&#45;&#45;' && trade?.originalIssuerName !== null && trade?.originalIssuerName !== ''"&ndash;&gt;
+                                            &lt;!&ndash;                                              class="com-icon"><img&ndash;&gt;
+                                            &lt;!&ndash;                                                pTooltip="{{ trade?.originalIssuerName }}" tooltipPosition="top"&ndash;&gt;
+                                            &lt;!&ndash;                                                src="assets/images/edit-outline.png"></span>&ndash;&gt;
+                                        </td>-->
+                                    <!--                                    <td>-->
+                                    <!--                                        <div *ngIf="!trade.shareSubType" class="representative  overflow-ellipses-icon"-->
+                                    <!--                                             appShowIfEllipsis-->
+                                    <!--                                             pTooltip="{{ trade?.shareType }}"-->
+                                    <!--                                             tooltipPosition="top">-->
+                                    <!--                                            {{((trade?.shareType === null || trade?.shareType === '') ? '&#45;&#45;' : trade?.shareType)}}-->
+                                    <!--                                        </div>-->
+                                    <!--                                        <div *ngIf="trade.shareSubType" class="representative  overflow-ellipses-icon"-->
+                                    <!--                                             appShowIfEllipsis-->
+                                    <!--                                             pTooltip="{{ trade?.shareSubType | uppercase }}"-->
+                                    <!--                                             tooltipPosition="top">-->
+                                    <!--                                            {{ trade?.shareSubType | uppercase}}-->
+                                    <!--                                        </div>-->
+                                    <!--                                        <span *ngIf="trade?.originalIssuerName !== '&#45;&#45;' && trade?.originalIssuerName !== null && trade?.originalIssuerName !== ''"-->
+                                    <!--                                              pTooltip="{{ trade?.originalIssuerName }}" tooltipPosition="top"-->
+                                    <!--                                              class="material-icons issuer-name-icon ">wysiwyg</span>-->
+                                    <!--                                    </td>-->
+                                    <td class="text-right" appShowIfEllipsis
+                                        pTooltip="{{ trade?.shareRange  | convertShareRange}}"
+                                        tooltipPosition="top"> {{ ((trade?.shareRange === null || trade?.shareRange === '') ? '--' : trade?.shareRange | convertShareRange)}}
+                                    </td>
+                                    <td class="text-right" appShowIfEllipsis
+                                        pTooltip="{{ trade?.sharePrice | currency : 'USD' : 'symbol' : '1.2-2' }}"
+                                        tooltipPosition="top"> {{ ((trade?.sharePrice === null) ? '--' : trade?.sharePrice
+                                        | currency : 'USD' : 'symbol' : '1.2-2')}}
+                                    </td>
+
+                                    <td class="text-right" appShowIfEllipsis pTooltip="{{ trade?.tradeValueRange }}"
+                                        tooltipPosition="top">
+                                        <span>{{ trade?.tradeValueRange }}</span>
+                                        <span
+                                                *ngIf="trade?.isCapitalGain !== false && trade?.isCapitalGain !== null"
+                                                class="com-icon mr-0 capital-gain-icon">
+
+                                    <img
+                                            pTooltip="Capital Gains > $200"
+                                            tooltipPosition="top"
+                                            src="assets/images/capital-gain.png">
+                                    </span>
+
+                                    </td>
+
+
+                                    <td pTooltip="If redirected  to Terms&Condition page, Please accept and click here again"
+                                        tooltipPosition="top">
+                                        <a href="{{trade?.rnsid}}" target="_blank">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-mobile-view visible-sm visible-xs visible-md-mini">
+                                <!--    <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Name</th>
+                                        <th>Ticker</th>
+                                        <th>Trade</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    </thead>-->
+                                <mat-accordion *ngIf="senatorTrades.length > 1">
+                                    <mat-expansion-panel
+                                            *ngFor="let trade  of senatorTrades | paginate: TablePageConfig">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <tbody>
+                                                <tr>
+                                                    <!--                                                    <td>{{ trade.transactionDate | date: "dd/MM/yy"}} </td>-->
+                                                    <td>
+                                                        <div style="font-size: 20px;margin-bottom: 5px;">
+                                                            <a *ngIf="!isGvkeyAvailable(trade)"
+                                                               [queryParams]="{name: trade.issuerName}"
+                                                               [routerLink]="['/issuer-info']">
+                                                                {{ trade?.issuerName }} </a>
+
+                                                            <a *ngIf="isGvkeyAvailable(trade)"
+                                                               [routerLink]="['/issuer-info', trade.gvkey]">
+                                                                {{ trade?.issuerName }} </a>
+                                                        </div>
+                                                        <a [routerLink]="['/politician-info', trade.biographyId]"
+                                                           routerLinkActive="active">
+                                                            {{ trade?.politicianName }}
+                                                        </a>
+                                                        <!--                                                        <div>{{ ((trade?.shareType !== null && trade?.shareType !== '') ? trade?.shareType : '&#45;&#45;') }}</div>-->
+                                                        <div
+                                                                appShowIfEllipsis
+                                                                pTooltip="{{ trade?.tradeType | changeTradeType | uppercase }}"
+                                                                tooltipPosition="top" class="text-overflow-normal">
+                                                            <div class="m-t-5">
+                                                                <!--<span *ngIf="trade?.congressType === 'Senator'">Sen. (</span>
+                                                                <span *ngIf="trade?.congressType === 'Representative'">Rep. (</span>
+                                                                <span *ngIf="trade?.party === 'Democrat' || trade?.party === 'Democratic'">D</span>
+                                                                <span *ngIf="trade?.party === 'Republican'">R</span>
+                                                                <span *ngIf="trade.congressType !== undefined">-</span>
+                                                                <span *ngIf="trade.state !== undefined">{{trade?.state + ")"}}</span>-->
+                                                                <span *ngIf="trade.congressType === 'Representative'"
+                                                                      class="party-symbol republican-party">
+                                                     <span>Rep ({{trade?.party === 'Democrat' ? 'D' :
+                                                         trade?.party === 'Republican' ? 'R' : 'O'}}
+                                                         - {{trade?.stateShortName}})</span>
+                                        </span>
+                                                                <span *ngIf="trade.congressType === 'Senator'"
+                                                                      class="party-symbol republican-party">
+                                                     <span>Sen ({{trade?.party === 'Democrat' ? 'D' :
+                                                         trade?.party === 'Republican' ? 'R' : 'O'}}
+                                                         - {{trade?.stateShortName}})</span>
+                                        </span>
+                                                            </div>
+                                                            <!--                                        <span-->
+                                                            <!--                                            *ngIf="trade?.comment !== '&#45;&#45;' && trade?.comment !== null && trade?.comment !== ''"-->
+                                                            <!--                                            class="com-icon"><img-->
+                                                            <!--                                            pTooltip="{{ trade?.comment }}" src="assets/images/comment.png"-->
+                                                            <!--                                            tooltipPosition="top"></span>-->
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <div style="color: #888;font-size: 16px;">{{ trade?.publicationDate?.split(' ')[0] | date: "dd/MMM/yyyy" }}</div>
+                                                        <!--<span [ngClass]="{'republican-txt-party': trade.party ==='Republican',
+                                                         'democratic-txt-party': trade.party === 'Democratic', 'other-txt-party' : (trade.party === 'Other' || trade.party === 'Independent')}"
+                                                              class="senator-txt">{{trade?.congressType}}</span>-->
+                                                        <div class="m-t-10" pTooltip="{{ trade?.comment }}"
+                                                             tooltipPosition="top">
+                                                            <span>{{ trade?.tradeType | changeTradeType | uppercase }} </span>
+                                                            <span> ({{((trade?.shareType === null || trade?.shareType === '') ?
+                                                                '--' : trade?.shareType)}})</span>
+
+                                                        </div>
+
+                                                        <div style="margin-top: 10px;font-size: 16px;">
+                                                            <div *ngIf="trade?.shareRange && trade?.sharePrice">
+                                                                <span>{{trade?.shareRange | convertShareRange}}</span><span> @ {{trade?.sharePrice |  currency : 'USD' : 'symbol' : '1.2-2' }} </span>
+                                                            </div>
+                                                            <div style="margin-top: 10px;font-size: 16px;"> {{trade?.tradeValueRange |  convertShareRange }} </div>
+                                                        </div>
+                                                        <!--    <span
+                                                                *ngIf="!isGvkeyAvailable(trade)"> {{ trade?.ticker }} </span>
+                                                            <a *ngIf="isGvkeyAvailable(trade)"
+                                                               [routerLink]="['/issuer-info', trade.gvkey]">
+                                                                {{ trade?.ticker }} </a>-->
+                                                    </td>
+                                                    <!--  <td>
+                                                          <img *ngIf="trade?.tradeType == 'Sale' || trade?.tradeType == 'Sale (Partial)' || trade?.tradeType == 'Sale (Full)'"
+                                                               width="20px" src="assets/images/arrow-bottom.png">
+                                                          <img *ngIf="trade?.tradeType == 'Purchase'" width="20px"
+                                                               src="assets/images/arrow-up.png">
+                                                          {{ trade?.tradeType | changeTradeType | uppercase }}
+                                                      </td>
+                                                      <td>
+                                                          {{ trade?.tradeValueRange }}
+                                                      </td>-->
+                                                </tr>
+                                                </tbody>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <tbody>
+                                        <tr class="collapsible-row">
+                                            <td><span class="table-txt-mobile-body">{{ trade?.politicianName}}</span>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    {{trade?.congressType}} ({{trade?.party}} - {{trade?.state}})
+                                                </div>
+                                            </td>
+                                            <td><span class="table-txt-mobile-body">Owner </span>
+                                                <span>{{ trade?.owner }}</span></td>
+                                            <td class="m-t-10"><span
+                                                    class="table-txt-mobile-body">Publication Date </span>
+                                                <span>{{ trade?.publicationDate | date: "dd/MMM/yyyy" }}</span></td>
+                                            <td><span class="table-txt-mobile-body">Filing Date </span>
+                                                <span>{{ trade?.filingDate | date: "dd/MMM/yyyy" }}</span></td>
+                                            <td><span class="table-txt-mobile-body">Trade Date </span>
+
+                                                <span>{{ trade?.transactionDate | date: "dd/MMM/yyyy" }}</span></td>
+                                            <!--<td><span class="table-txt-mobile-body">Date (Publication) </span>
+                                                <span>{{ trade?.filingDate | date: "dd/MMM/yyyy" }}</span></td>-->
+                                            <!--                                            <td><b>Owner :</b> <span>{{ trade.owner | titlecase }}</span></td>-->
+
+                                            <!-- <td><span class="table-txt-mobile-body">Asset Class </span>
+                                                 <span>{{ ((trade?.shareType !== null && trade?.shareType !== '') ? trade?.shareType : '--') }}</span>
+                                             </td>-->
+                                            <!--                                            <td><b>Financial Instrument :</b>-->
+                                            <!--                                                <span *ngIf="!trade.shareSubType"> {{((trade?.shareType === null || trade?.shareType === '') ? '&#45;&#45;' : trade?.shareType)}} </span>-->
+                                            <!--                                                <span *ngIf="trade.shareSubType"> {{ trade?.shareSubType | uppercase}} </span>-->
+                                            <!--                                            </td>-->
+                                            <td><span class="table-txt-mobile-body">Ticker </span>
+                                                <span>  <a *ngIf="!isGvkeyAvailable(trade)"
+                                                           [queryParams]="{name: trade.issuerName}"
+                                                           [routerLink]="['/issuer-info']">
+                                                {{ ((trade?.ticker === '' || trade?.ticker === null) ? '--' : trade?.ticker) }} </a>
+                                                <a *ngIf="isGvkeyAvailable(trade)"
+                                                   [routerLink]="['/issuer-info', trade.gvkey]">
+                                                {{ ((trade?.ticker === '' || trade?.ticker === null) ? '--' : trade?.ticker) }} </a></span>
+                                            </td>
+                                            <td><span class="table-txt-mobile-body">Shares </span>
+                                                <span>{{ ((trade?.shareRange === null || trade?.shareRange === '') ? '--' : trade?.shareRange | convertShareRange)}}</span>
+                                            </td>
+
+                                            <td><span class="table-txt-mobile-body">Share Price </span>
+                                                <span>{{ ((trade?.sharePrice === null) ? '--' : trade?.sharePrice | currency : 'USD' : 'symbol' : '1.2-2')}}</span>
+                                            </td>
+                                            <td><span class="table-txt-mobile-body">Value </span>
+                                                <span>{{ trade?.tradeValueRange  | convertShareRange}}</span>
+                                            </td>
+                                            <td><span class="table-txt-mobile-body">Attachments </span> <span> <a
+                                                    href="{{trade?.rnsid}}" target="_blank">View
+                                        </a></span></td>
+                                            <td class="m-t-10" style="flex-direction: column;" *ngIf="trade?.comment">
+                                                <span>Comments: </span>
+                                                <span>{{ trade?.comment }}</span></td>
+                                        </tr>
+                                        </tbody>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                            </table>
+                            <div class="loader-wrap">
+                                <p-progressSpinner *ngIf="loading" [style]="{width: '40px', height: '40px'}"
+                                                   animationDuration=".5s" fill="#EEEEEE" strokeWidth="4">
+                                </p-progressSpinner>
+                            </div>
+
+                        </div>
+                        <div *ngIf="senatorTrades.length > 1" class="table-bottom-pagination">
+                            <div class="table-bottom-text">
+                                <h5>Showing {{entriesFrom}} to {{entriesTo}} of
+                                    {{senatorTrades[0]?.totalTrades || senatorTrades?.length }}
+                                    Total Entries</h5>
+                                <!--<p class="footer-note"> *Sale (Full): Sold all stocks in given issuer
+                                    <br>
+                                    **Sale (Partial): Sold some of the stocks of
+                                    the total held in given issuer.</p>-->
+                            </div>
+                            <pagination-controls (pageChange)="getTrades($event)" id="server">
+                            </pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<p-dialog [(visible)]="displayModal" [baseZIndex]="10000" [modal]="true" [style]="{width: '1000px'}"
+          (onHide)="onCloseFilterDialog();  hide(dd)" header="Filters">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 bg-white p-t-15 p-b-15 sm-pt-0 sm-pb-0">
+            <div class="form-select">
+                <label>Politician</label>
+                <p-multiSelect [options]="suggestedPoliticianNames" [(ngModel)]="selectedPoliticianNames"
+                               [virtualScroll]="true" itemSize="30" optionLabel="name" appendTo="body" #dd>
+                </p-multiSelect>
+                <!--    <ng-select [(ngModel)]="selectedSenatorName"
+                               [items]="senatorSuggestions" placeholder="Select Senator / Representative" appendTo="body">
+                    </ng-select>-->
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 bg-white p-t-15 p-b-15 sm-pt-0 sm-pb-0">
+            <div class="form-select">
+                <label>Stock / Issuer</label>
+                <!--   <ng-select [(ngModel)]="selectedIssuerName"
+                              [items]="issuerSuggestions" [virtualScroll]="true"
+                              placeholder="Select Stock / Issuer" appendTo="body">
+                       <ng-template let-item="item" ng-option-tmp>
+                           <div title="{{item}}">{{item}}</div>
+                       </ng-template>
+                   </ng-select>-->
+
+
+                <p-multiSelect [options]="issuerSuggestions" [(ngModel)]="selectedIssuerNames" [virtualScroll]="true"
+                               appendTo="body" itemSize="30" optionLabel="name" #dd>
+
+                </p-multiSelect>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 bg-white p-t-15 p-b-15 sm-pt-0 sm-pb-0">
+            <div class="form-select multi-select">
+
+                <mat-form-field floatLabel="always">
+                    <mat-label>Asset Class</mat-label>
+                    <mat-select [(ngModel)]="selectedShareType" multiple placeholder="Select Asset Class">
+                        <mat-select-trigger>
+                            {{selectedShareType ? selectedShareType[0] : ''}}
+                            <span *ngIf="selectedShareType?.length > 1" class="example-additional-selection">
+                                  (+{{selectedShareType.length - 1}} {{selectedShareType?.length === 2 ? 'other' : 'others'}}
+                                )
+                                       </span>
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let type of shareTypes" [value]="type">{{type}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 bg-white p-t-15 p-b-15 sm-pt-0 sm-pb-0">
+            <div class="form-select multi-select">
+
+                <mat-form-field floatLabel="always">
+                    <mat-label>Transaction Type</mat-label>
+                    <mat-select [(ngModel)]="selectedTradeType" multiple placeholder="Select Transaction Type">
+                        <mat-select-trigger>
+                            {{selectedTradeType ? selectedTradeType[0] : ''}}
+                            <span *ngIf="selectedTradeType?.length > 1" class="example-additional-selection">
+                                  (+{{selectedTradeType.length - 1}} {{selectedTradeType?.length === 2 ? 'other' : 'others'}}
+                                )
+                                       </span>
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let type of tradeTypes" [value]="type">{{type}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 bg-white p-t-15 p-b-15 sm-pt-0 sm-pb-0">
+            <div class="form-select">
+                <label>Congress Type</label>
+                <ng-select [(ngModel)]="selectedCongressType"
+                           [items]="congressTypes" placeholder="Select Congress Type" appendTo="body"></ng-select>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 bg-white p-t-15 p-b-15 sm-pt-0 sm-pb-0">
+            <div class="form-select">
+                <label>Political Party</label>
+                <ng-select [(ngModel)]="selectedPartyType"
+                           [items]="politicianParties" placeholder="Select Political Party" appendTo="body"></ng-select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+
+        <!--        <div> </div>-->
+        <!-- <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 bg-white p-t-15 p-b-15 sm-pt-0 sm-pb-0">
+             <div class="form-select">
+                 <label>Filling Date</label>
+                 <input type="text" ngxDaterangepickerMd
+                        class="form-control" placeholder="From - To"
+                        [locale]="{format: 'DD/MMM/YYYY'}"
+                        [showDropdowns]="true"
+                        [showClearButton]="true"
+                        [(ngModel)]="filingDateFilter"
+                        [customRangeDirection]="false"
+                        (change)="onFillingRangeSelection($event)"
+                        showCancel="true"
+                 />
+             </div>
+         </div>-->
+
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 bg-white p-t-15 p-b-15 sm-pt-0 sm-pb-0">
+            <div class="form-select multi-select">
+                <label>Publication Date</label>
+                <input type="text" ngxDaterangepickerMd
+                       class="form-control" placeholder="From - To"
+                       [locale]="{format: 'DD/MMM/YYYY'}"
+                       [showDropdowns]="true"
+                       [showClearButton]="true"
+                       [(ngModel)]="publicationDateFilter"
+                       [customRangeDirection]="false"
+                       (change)="onPublicationRangeSelection($event)"
+                       showCancel="true"/>
+
+                <!--                functional this new date picker-->
+
+                <!--      <mat-form-field floatLabel="always">
+                          <mat-label class="input-label">Publication Date</mat-label>
+                          <mat-date-range-input [rangePicker]="picker">
+                              <input matStartDate placeholder="Start date">
+                              <input matEndDate placeholder="End date">
+                          </mat-date-range-input>
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-date-range-picker #picker></mat-date-range-picker>
+                      </mat-form-field>-->
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 bg-white p-t-15 p-b-15 sm-pt-0 sm-pb-0">
+            <div class="form-select multi-select">
+                <label>Transaction Date</label>
+                <input (change)="onTransactionRangeSelection($event)" [customRangeDirection]="false"
+                       [locale]="{format: 'DD/MMM/YYYY'}" [showClearButton]="true"
+                       [showDropdowns]="true"
+                       [(ngModel)]="transactionDateFilter"
+                       class="form-control"
+                       ngxDaterangepickerMd
+                       placeholder="From - To"
+                       showCancel="true"
+                       type="text"
+
+                />
+                <!--                functional this new date picker-->
+
+                <!--   <mat-form-field floatLabel="always">
+                       <mat-label class="input-label">Transaction Date</mat-label>
+                       <mat-date-range-input [rangePicker]="pickert">
+                           <input matStartDate placeholder="Start date">
+                           <input matEndDate placeholder="End date">
+                       </mat-date-range-input>
+                       <mat-datepicker-toggle matSuffix [for]="pickert"></mat-datepicker-toggle>
+                       <mat-date-range-picker #pickert></mat-date-range-picker>
+                   </mat-form-field>-->
+            </div>
+        </div>
+
+    </div>
+
+    <!--    <div class="row hidden-sm hidden-xs hidden-md-mini">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 bg-white p-t-15 p-b-15">
+                <div class="form-select">
+                    <label>Filling Date</label>
+                    <input type="text" ngxDaterangepickerMd
+                           class="form-control" placeholder="From - To"
+                           [locale]="{format: 'DD/MMM/YYYY'}"
+                           [showDropdowns]="true"
+                           [showClearButton]="true"
+                           [customRangeDirection]="false"
+                           (change)="onFillingRangeSelection($event)"
+                           showCancel="true"
+                    />
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 bg-white p-t-15 p-b-15">
+                <div class="form-select">
+                    <label>Transaction Date</label>
+                    <input type="text" ngxDaterangepickerMd
+                           class="form-control" placeholder="From - To"
+                           [locale]="{format: 'DD/MMM/YYYY'}"
+                           [showDropdowns]="true"
+                           [showClearButton]="true"
+                           [customRangeDirection]="false"
+                           (change)="onTransactionRangeSelection($event)"
+                           showCancel="true"
+                    />
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 bg-white p-t-15 p-b-15">
+                <div class="form-select">
+                    <label>Congress Type</label>
+                    <ng-select (change)="searchTrades()" (remove)="searchTrades()"
+                               [(ngModel)]="selectedCongressType"
+                               [items]="congressTypes" placeholder="Select Congress Type"></ng-select>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 bg-white p-t-15 p-b-15">
+                <div class="form-select">
+                    <label>Political Party</label>
+                    <ng-select (change)="searchTrades()" (remove)="searchTrades()"
+                               [(ngModel)]="selectedPartyType"
+                               [items]="politicianParties" placeholder="Select Political Party"></ng-select>
+                </div>
+            </div>
+
+        </div>-->
+    <p-footer>
+        <a style="cursor: pointer; margin-right: 15px;position: relative;
+    top: 2px;
+    font-size: 12px;" (click)="clearFilters(); hide(dd)"> Clear Filters</a>
+        <button (click)="applyChanges(); hide(dd);" class="btn btn-primary btn-sm" type="button">Apply</button>
+        <!--        <button (click)="clearFilters()" class="btn btn-danger mr-0 btn-sm" type="button">Clear Filters</button>-->
+    </p-footer>
+</p-dialog>
+
+<app-filters (appliedFilters)=getFiltersForMobile($event)></app-filters>

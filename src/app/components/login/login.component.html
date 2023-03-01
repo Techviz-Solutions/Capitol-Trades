@@ -1,0 +1,26 @@
+<!-- <div class="login-box">
+  <div class="login-box-body">
+      <h2 style="text-align:center;">2IQ Research</h2>
+      <p class="login-box-msg">Sign in to start your session</p>
+      <p *ngIf="errorMsg !== ''" style="color:#a94442;">{{errorMsg}}</p>
+      <form #loginForm="ngForm" class="login-form" novalidate>
+          <div class="form-group has-feedback">
+              <input type="text" [(ngModel)]="loginName" required class="form-control" name="username" placeholder="Username" #name="ngModel">
+              <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+          </div>
+          <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+              Username is required
+          </div>
+          <div class="form-group has-feedback">
+              <input type="password" [(ngModel)]="loginPassword" required class="form-control" name="password" placeholder="Password" #psw="ngModel">
+              <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          </div>
+          <div [hidden]="psw.valid || psw.pristine" class="alert alert-danger">
+              Password is required
+          </div>
+          <div class="form-group">
+              <button [disabled]="!loginForm.form.valid" class="pull-right btn btn-primary form-control" type="submit" (click)="login()">Login</button>
+          </div>
+      </form>
+  </div>
+</div> -->
